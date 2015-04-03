@@ -69,7 +69,7 @@ You can then install the application using the following command:
 
 ~~~
 php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
-php composer.phar create-project --prefer-dist dezmont765/yii2-app-advanced-with-rbac
+php composer.phar create-project --prefer-dist dezmont765/yii2-rbac-advanced-template
 ~~~
 
 
