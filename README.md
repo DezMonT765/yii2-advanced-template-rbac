@@ -1,7 +1,7 @@
-Yii 2 Advanced Application Template
+Yii 2 Advanced Application Template With RBAC
 ===================================
 
-Yii 2 Advanced Application Template is a skeleton Yii 2 application best for
+Yii 2 Advanced Application Template With RBAC user management tool is a skeleton Yii 2 application best for
 developing complex Web applications with multiple tiers.
 
 The template includes three tiers: front end, back end, and console, each of which
@@ -9,6 +9,8 @@ is a separate Yii application.
 
 The template is designed to work in a team development environment. It supports
 deploying the application in different environments.
+
+Also it includes nice user management system in backend, and custom layout system.
 
 
 DIRECTORY STRUCTURE
@@ -75,7 +77,7 @@ You can then install the application using the following command:
 
 ~~~
 php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
-php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-advanced advanced
+php composer.phar create-project --prefer-dist dezmont765/yii2-app-advanced-with-rbac advanced
 ~~~
 
 
@@ -85,9 +87,12 @@ GETTING STARTED
 After you install the application, you have to conduct the following steps to initialize
 the installed application. You only need to do these once for all.
 
-1. Run command `init` to initialize the application with a specific environment.
-2. Create a new database and adjust the `components['db']` configuration in `common/config/main-local.php` accordingly.
-3. Apply migrations with console command `yii migrate`. This will create tables needed for the application to work.
+1. Run command `php init` to initialize the application with a specific environment.
+2. Create a new database and adjust the `components['db']` configuration in `common/config/common-local.php` accordingly.
+3. Apply migrations with console commands: 
+   a) `php yii migrate`. This will create tables needed for the application to work;
+   b) `php yii migrate --migrationPath=@yii/rbac/migrations`. This will create RBAC tables.
+4. Run command `php yii rbac/init` to install necessary RBAC rules in DB
 4. Set document roots of your Web server:
 
 - for frontend `/path/to/yii-application/frontend/web/` and using the URL `http://frontend/`
