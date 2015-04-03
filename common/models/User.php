@@ -43,7 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password','passwordConfirm'],'required','on'=>'create'],
             ['passwordConfirm','compare','compareAttribute'=>'password','on'=>'create'],
             ['role','default','value'=> self::user],
-            ['role','in','range'=>array_flip(Yii::$app->user->identity->getEditableRoles())],
+            ['role','in','range'=>!Yii::$app->user->isGuest ? array_flip(Yii::$app->user->identity->getEditableRoles()) : array_flip(User::$roles)],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
         ];
