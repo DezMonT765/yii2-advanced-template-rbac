@@ -1,8 +1,7 @@
 Yii 2 Advanced Application Template With RBAC
 ===================================
 
-Yii 2 Advanced Application Template With RBAC user management tool is a skeleton Yii 2 application best for
-developing complex Web applications with multiple tiers.
+yii2-advanced-template-rbac is based on yii2-app-advanced created by yii2 core developers. There are several upgrades made to this template.
 
 The template includes three tiers: front end, back end, and console, each of which
 is a separate Yii application.
@@ -90,12 +89,12 @@ the installed application. You only need to do these once for all.
 - for frontend `/path/to/yii-application/frontend/web/` and using the URL `http://frontend/`
 - for backend `/path/to/yii-application/backend/web/` and using the URL `http://backend/`
 
-To login into the application, you need to first sign up, with any of your email address, username and password.
-Then, you can login into the application with same email address and password at any time.
+If you want to use the application you'll need to register in the system using frontend user interface. 
+You can register into the system using any valid email address and any password.
 
-There are 3 types of users in system : `super_admin`, `admin` and `user`.
-This types could be simply changed by editing `role` field in `user` table in db, or via admin tool in backend.
+There are 3 types of users available for you in system: `super_admin`, `admin` and `user`.
+This types of users can be simply changed by editing the role field in user table, or via admin user interface in backend.
 
-When you register your first user in system, he will be a `user`.
-But `user` have no access to backend, so you have to change his role to `admin` or `super_admin`.
-Once, you log in backend, you will see a simple but powerful user-managment page where you can CRUD users, as you wish.
+When you register the first user in the system, his role is set to `user` by default.
+Notice that `user` have no access to backend, so you'll have to change his role to `admin` or `super_admin` in the DB manually.
+Once, you enter the backend, you will see a simple but powerful user-management page where you can CRUD users, as you wish.

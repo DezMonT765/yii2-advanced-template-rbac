@@ -33,12 +33,15 @@ $this->title = Yii::t('app', 'Users');
                  'attribute'=>'status',
                  'url'=>['ajaxUpdate'],
                  'type'=>'select',
-                 'value' => function($data){
-                     return User::getStatus($data->status);
-                 },
-                 'editableOptions'=>[
-                     'source' => User::$statuses
-                 ]
+                 'display' => "colors",
+                 'editableOptions'=> function ($model)
+                 {
+                     return [
+                        'source' => User::$statuses,
+                        'value' =>$model->status
+                     ];
+                 }
+
              ],
              [
                'class'=>\dosamigos\grid\EditableColumn::className(),
@@ -49,10 +52,12 @@ $this->title = Yii::t('app', 'Users');
                    return User::getRole($data->role);
                },
                'type'=>'select',
+               'display' => "function(value,sourceData,response){console.log(sourceData);}",
                'editableOptions'=>
                [
-                   'source' => Url::to(['user/available-groups']),
-                   'sourceCache' => false
+                   'source' => Yii::$app->user->identity->getEditableRoles(),
+                   'sourceCache' => false,
+
                ]
              ],
 
@@ -74,11 +79,10 @@ $this->title = Yii::t('app', 'Users');
 </div>
 <script>
     function colors(value, sourceData) {
-        alert(1);
         var selected = $.grep(sourceData, function (o) {
                 return value == o.value;
             }),
-            colors = '<?=json_encode(User::$status_colors)?>';
-        $(this).text(selected[0].text).css("color", colors[value]);
+            colors = <?=json_encode(User::$status_colors)?>;
+        $(this).html(selected[0].text).css("color", colors[value]);
     }
 </script>

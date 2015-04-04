@@ -15,9 +15,9 @@ $this->title = 'My Yii Application';
         <?php if(Yii::$app->user->isGuest) : ?>
         <p class="lead">The site is now alive! You can :</p>
 
-        <p><a class="btn btn-lg btn-success" href="<?=Url::to('user/login')?>">Login</a></p>
+        <p><a class="btn btn-lg btn-success" href="<?=Url::to('site/login')?>">Login</a></p>
         <p class="y-cnt-text">-or-</p>
-        <p><a class="btn btn-lg btn-success" href="<?=Url::to('user/register')?>">Register</a></p>
+        <p><a class="btn btn-lg btn-success" href="<?=Url::to('site/register')?>">Register</a></p>
         <?php else:?>
             <p class="lead">You are loggen in! You can :</p>
             <p><a class="btn btn-lg btn-success" href="<?=Url::to(['user/view','id'=>Yii::$app->user->identity->getId()])?>">Go to your profile</a></p>
