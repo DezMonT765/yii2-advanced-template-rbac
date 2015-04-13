@@ -36,12 +36,15 @@ class Alert
         self::SUCCESS => 'FrSuccess',
     );
 
-    public static $messages = array(
-        self::ERROR => 'Your request failed with errors:',
-        self::WARNING => 'Your request ends with warnings:',
-        self::SUCCESS => 'Your request ends successfully',
-        self::NONE => 'Can not determine alert type',
-    );
+    public static function  messages()
+    {
+        return [
+            self::ERROR => Yii::t('messages','Your request failed with errors:'),
+            self::WARNING => Yii::t('messages','Your request ends with warnings:'),
+            self::SUCCESS => Yii::t('messages','Your request ends successfully'),
+            self::NONE => Yii::t('messages','Can not determine alert type'),
+        ];
+    }
 
     public static $general_statuses = array(
         '100'=>  self::SUCCESS,
@@ -120,6 +123,8 @@ class Alert
 
     /**
      * Prints all collected alerts with proper colors, and then deletes them
+     * @param $viewInstance
+     * @return string
      */
     public static function printAlert(&$viewInstance)
     {
@@ -130,9 +135,9 @@ class Alert
         {
             $result = $viewInstance->render('/'.$view,array('general_message'=>self::getGeneralMessage(),
                                                                     'general_color'=>self::getColor(),
-                                                                    'succStore'=>self::getAlertStore(self::SUCCESS),
-                                                                    'warnStore'=>self::getAlertStore(self::WARNING),
-                                                                    'errStore'=>self::getAlertStore(self::ERROR),
+                                                                    'success_store'=>self::getAlertStore(self::SUCCESS),
+                                                                    'warning_store'=>self::getAlertStore(self::WARNING),
+                                                                    'error_store'=>self::getAlertStore(self::ERROR),
                                                               ));
             self::dropAlerts();
         }
@@ -252,7 +257,7 @@ class Alert
     public static function getGeneralMessage()
     {
 
-        $title_message = self::$messages[self::getGeneralStatus()];
+        $title_message = self::messages()[self::getGeneralStatus()];
         return  $title_message;
     }
 

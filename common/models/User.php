@@ -1,10 +1,10 @@
 <?php
 namespace common\models;
 
+use MainActiveRecord;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
@@ -25,7 +25,7 @@ use yii\web\UploadedFile;
  * @property string $password write-only password
  * @property string $role
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends MainActiveRecord implements IdentityInterface
 {
 
     public   $resumeFile;
@@ -43,7 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password','passwordConfirm'],'required','on'=>'create'],
             ['passwordConfirm','compare','compareAttribute'=>'password','on'=>'create'],
             ['role','default','value'=> self::user],
-            ['role','in','range'=>!Yii::$app->user->isGuest ? array_flip(Yii::$app->user->identity->getEditableRoles()) : array_flip(User::$roles)],
+            ['role','in','range'=>!Yii::$app->user->isGuest ? array_flip(Yii::$app->user->identity->getEditableRoles()) : array_flip(User::roles())],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
         ];
@@ -124,37 +124,42 @@ class User extends ActiveRecord implements IdentityInterface
     private static $_logged_user = null;
     private static $_is_need_update = false;
 
-    public static $statuses = [
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_INACTIVE => 'Inactive'
-    ];
+    public static function statuses()
+    {
+        return [
+            self::STATUS_ACTIVE => Yii::t('user','Active'),
+            self::STATUS_INACTIVE => Yii::t('user','Inactive')
+        ];
+    }
 
     public static function  getStatus($status)
     {
-        return (isset(self::$statuses[$status]) ? self::$statuses[$status] : null);
+        return (isset(self::statuses()[$status]) ? self::statuses()[$status] : null);
     }
 
     public function getCurrentStatus()
     {
-        return (isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : null);
+        return (isset(self::statuses()[$this->status]) ? self::statuses()[$this->status] : null);
     }
 
 
     public static function  getRole($role)
     {
-        return (isset(self::$roles[$role]) ? self::$roles[$role] : null);
+        return (isset(self::roles()[$role]) ? self::roles()[$role] : null);
     }
 
     public function getCurrentRole()
     {
-        return (isset(self::$roles[$this->role]) ? self::$roles[$this->role] : null);
+        return (isset(self::roles()[$this->role]) ? self::roles()[$this->role] : null);
     }
 
-    public static $roles = [
-      self::user => 'User',
-      self::admin => 'Admin',
-      self::super_admin => 'Super Admin',
-    ];
+    public static function roles() {
+        return [
+            self::user => Yii::t('user','User'),
+            self::admin => Yii::t('user','Admin'),
+            self::super_admin => Yii::t('user','Super Admin'),
+        ];
+    }
 
     public static $status_colors = [
       self::STATUS_INACTIVE  => 'red',
@@ -166,9 +171,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function getEditableRoles()
     {
         $editable_roles = [
-            self::super_admin => [self::admin => 'Admin',self::user=>'User'],
-            self::admin => [self::user=>'User'],
-            self::user => []
+            self::super_admin => [self::admin => Yii::t('user','Admin'),self::user=>Yii::t('user','User')],
+            self::admin => [self::user=>Yii::t('user','User')],
+            self::user => [self::user=>Yii::t('user','User')]
         ];
         return isset($editable_roles[$this->role]) ? $editable_roles[$this->role] : [];
     }
@@ -388,5 +393,18 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'email' => Yii::t('user','Email'),
+            'status' => Yii::t('user','Status'),
+            'role' => Yii::t('user','Role'),
+            'password' => Yii::t('user','Password'),
+            'passwordConfirm' => Yii::t('user','Confirm password'),
+            'created_at' => Yii::t('user','Created At'),
+            'updated_at' => Yii::t('user','Updated At'),
+        ];
     }
 }

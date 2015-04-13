@@ -10,7 +10,7 @@ include_once('header.php');
 <div class="wrap">
     <?php
     NavBar::begin([
-                      'brandLabel' => 'Thinkconsillium backend',
+                      'brandLabel' => Yii::t('header','Admin panel'),
                       'brandUrl' => Yii::$app->homeUrl,
                       'options' => [
                           'class' => 'navbar-default navbar-fixed-top',

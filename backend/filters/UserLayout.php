@@ -7,6 +7,7 @@
  */
 namespace backend\filters;
 
+use Yii;
 use yii\helpers\Url;
 
 class UserLayout extends TabbedLayout
@@ -23,14 +24,14 @@ class UserLayout extends TabbedLayout
     {
 
         $tabs = [
-            ['label'=>'List users','url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::manage())],
-            ['label'=>'Create user','url'=>Url::to(['user/create']),'active'=>self::getActive($active,self::create())],
+            ['label'=>Yii::t('user','List users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::manage())],
+            ['label'=>Yii::t('user','Create user'),'url'=>Url::to(['user/create']),'active'=>self::getActive($active,self::create())],
         ];
         if(self::getActive($active,self::update()))
         {
             $tabs =  array_merge($tabs,[
-                ['label'=>'Update user',
-                 'url'=>Url::to(['user/update'] + self::getParams()),
+                ['label'=>Yii::t('user','Update user'),
+                 'url'=>Url::to(array_merge(['user/update'],self::getParams())),
                  'active'=>true
                 ]
             ]);
@@ -38,8 +39,8 @@ class UserLayout extends TabbedLayout
         if(self::getActive($active,self::view()))
         {
             $tabs =  array_merge($tabs,[
-                ['label'=>'View user',
-                 'url'=>Url::to(['user/view'] + self::getParams()),
+                ['label'=>Yii::t('user','View user'),
+                 'url'=>Url::to(array_merge(['user/view'],self::getParams())),
                  'active'=>true
                 ]
             ]);

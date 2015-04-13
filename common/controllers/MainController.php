@@ -1,5 +1,6 @@
 <?php
 namespace common\controllers;
+use MainActiveRecord;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -57,7 +58,52 @@ class MainController extends Controller
         if (($model = $model_class::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(Yii::t('messages','The requested page does not exist.'));
         }
+    }
+
+
+
+
+
+    public function selectionList($model_class,$attribute,callable $return_wrap = null)
+    {
+        /** @var MainActiveRecord $model_class
+          * @var MainActiveRecord $model
+         */
+        $value = Yii::$app->request->getQueryParam('value');
+        $model = new $model_class;
+        $models = $model->searchByAttribute($attribute,$value);
+        $model_array = [];
+        foreach ($models as $model)
+        {
+            $model_array[] =['id'=>$model->id,'text'=> is_null($return_wrap) ? $model->name : $return_wrap($model) ];
+        }
+        echo json_encode(['more'=>false,'results'=>$model_array]);
+    }
+
+    public function selectionById($model_class,callable $return_wrap = null)
+    {
+        /** @var MainActiveRecord $model_class
+         *  @var MainActiveRecord $model
+         */
+        $id = Yii::$app->request->getQueryParam('id');
+        $model = new $model_class;
+        $ids = explode(',',$id);
+        $models = $model->searchByIds($ids);
+        $model_array = [];
+        if(count($models) == 1)
+        {
+            $model = array_shift($models);
+            $model_array = ['id'=>$model->id,'text'=> is_null($return_wrap) ? $model->name : $return_wrap($model)];
+        }
+        else
+        {
+            foreach ($models as $model)
+            {
+                $model_array[] =['id'=>$model->id,'text'=> is_null($return_wrap) ? $model->name : $return_wrap($model)];
+            }
+        }
+        echo json_encode(['more'=>false,'results'=>$model_array]);
     }
 }

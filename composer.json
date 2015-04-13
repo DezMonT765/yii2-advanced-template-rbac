@@ -10,6 +10,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/DezMonT765/yii2-grid-view-library"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/DezMonT765/zyx-phpmailer"
         }
     ],
     "require": {
@@ -17,7 +21,8 @@
         "yiisoft/yii2": "*",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "dezmont765/yii2-grid-view-library" : "dev-master"
+        "dezmont765/yii2-grid-view-library" : "dev-master",
+        "zyx/zyx-phpmailer": "dev-log-fix"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -14,7 +14,7 @@ include_once('header.php');
    <?php
     
     NavBar::begin([
-                      'brandLabel' => 'Advanced Template backend',
+                      'brandLabel' => Yii::t('header','Admin panel'),
                       'brandUrl' => Yii::$app->homeUrl,
                       'options' => [
                           'class' => 'navbar-default navbar-fixed-top',

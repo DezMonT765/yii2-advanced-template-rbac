@@ -9,7 +9,7 @@ use yii\helpers\Url;
 /* @var $searchModel common\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Users');
+$this->title = Yii::t('user', 'List users');
 ?>
 <div class="user-index">
     <br>
@@ -29,7 +29,7 @@ $this->title = Yii::t('app', 'Users');
              ],
              [
                  'class'=>\dosamigos\grid\EditableColumn::className(),
-                 'filter' => User::$statuses,
+                 'filter' => User::statuses(),
                  'attribute'=>'status',
                  'url'=>['ajaxUpdate'],
                  'type'=>'select',
@@ -37,7 +37,7 @@ $this->title = Yii::t('app', 'Users');
                  'editableOptions'=> function ($model)
                  {
                      return [
-                        'source' => User::$statuses,
+                        'source' => User::statuses(),
                         'value' =>$model->status
                      ];
                  }
@@ -45,7 +45,7 @@ $this->title = Yii::t('app', 'Users');
              ],
              [
                'class'=>\dosamigos\grid\EditableColumn::className(),
-               'filter' => User::$roles,
+               'filter' => User::roles(),
                'attribute'=>'role',
                'url'=>['ajaxUpdate'],
                'value' => function($data){

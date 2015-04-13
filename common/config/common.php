@@ -20,6 +20,18 @@ return [
         'view' => [
             'class' => 'common\components\MainView',
         ],
+        'mailer' => [
+            'class' => \zyx\phpmailer\Mailer::className(),
+            'viewPath' => '@common/mail',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => false,
+            'messageConfig'    => [
+                'from' => ['support@admin-template.com'],
+            ],
+
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -28,6 +40,18 @@ return [
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ]
+        ],
+        'session' => [
+            'class' => 'yii\web\DbSession'
+        ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
+            ],
         ],
     ],
 ];

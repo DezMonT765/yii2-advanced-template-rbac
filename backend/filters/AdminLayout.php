@@ -64,14 +64,14 @@ class AdminLayout extends LayoutFilter
     public static function getGuestRightNav($active)
     {
         return [
-            ['label'=>'Login','url'=>Url::to(['site/login']),'active'=>self::getActive($active,self::login())],
+            ['label'=>Yii::t('header','Login'),'url'=>Url::to(['site/login']),'active'=>self::getActive($active,self::login())],
         ];
     }
 
     public static function getLeftTabs($active)
     {
         $tabs = [
-            ['label'=>'Manage users','url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::users())]
+            ['label'=>Yii::t('header','Manage users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::users())]
         ];
 
         return $tabs;
@@ -82,9 +82,9 @@ class AdminLayout extends LayoutFilter
         /**@var User $user*/
         $user = Yii::$app->user->identity;
         return [
-            ['label'=>'Hello, '. $user->email,'items'=>[
-                ['label'=>'My profile','url'=>Url::to(['user/view','id'=> $user->id])],
-                ['label'=>'Log out','url'=>['site/logout']]
+            ['label'=>Yii::t('header','Hello, '). $user->email,'items'=>[
+                ['label'=>Yii::t('header','My profile'),'url'=>Url::to(['user/view','id'=> $user->id])],
+                ['label'=>Yii::t('header','Log out'),'url'=>['site/logout']]
             ]],
         ];
     }

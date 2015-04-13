@@ -1,4 +1,6 @@
 <?php
+require_once('../../common/components/MainView.php');
+use common\components\MainView;
 use frontend\models\User;
 
 $params = array_merge(
@@ -26,7 +28,11 @@ return [
             \yii\web\JqueryAsset::className() => [
                 'js'=> [
                     "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
-                ]
+                ],
+                'jsOptions' =>
+                    [
+                        'position' => MainView::POS_HEAD,
+                    ],
             ],
             \yii\bootstrap\BootstrapAsset::className() => [
                 'baseUrl' => '@web',
