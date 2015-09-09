@@ -24,8 +24,8 @@ class UserLayout extends TabbedLayout
     {
 
         $tabs = [
-            ['label'=>Yii::t('user','List users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::manage())],
-            ['label'=>Yii::t('user','Create user'),'url'=>Url::to(['user/create']),'active'=>self::getActive($active,self::create())],
+            ['label'=>Yii::t('user','List users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,TabbedLayout::listing())],
+            ['label'=>Yii::t('user','Create user'),'url'=>Url::to(['user/create']),'active'=>self::getActive($active,TabbedLayout::create())],
         ];
         if(self::getActive($active,self::update()))
         {

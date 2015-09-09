@@ -14,6 +14,7 @@ use yii\helpers\Url;
  * @method static login()
  * @method static register()
  * @method static users()
+ * @method static templates()
  */
 
 class AdminLayout extends LayoutFilter
@@ -53,7 +54,7 @@ class AdminLayout extends LayoutFilter
             ];
                 break;
             case RbacController::super_admin : $nav_bar = [
-                self::place_left_nav => static::getLeftTabs($active),
+                self::place_left_nav => static::getSuperAdminLeftTabs($active),
                 self::place_right_nav => static::getRightNav($active),
             ];
         }
@@ -74,6 +75,16 @@ class AdminLayout extends LayoutFilter
             ['label'=>Yii::t('header','Manage users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::users())]
         ];
 
+        return $tabs;
+    }
+
+    public static function getSuperAdminLeftTabs($active)
+    {
+        $tabs = [
+            ['label' => 'Manage users', 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
+            ['label' => 'Manage templates', 'url' => Url::to(['mail-template/list']), 'active' => self::getActive($active, AdminLayout::templates())]
+
+        ];
         return $tabs;
     }
 

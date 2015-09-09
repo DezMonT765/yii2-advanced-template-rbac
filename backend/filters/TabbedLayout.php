@@ -7,7 +7,7 @@ namespace backend\filters;
  * Date: 24.03.2015
  * Time: 18:50
  * @method static place_tabs()
- * @method static manage()
+ * @method static listing()
  * @method static update()
  * @method static create()
  * @method static view()
@@ -21,10 +21,10 @@ class TabbedLayout extends AdminLayout
     {
 
         return [
-            'list' => [static::manage()],
-            'create' => [static::create()],
-            'update' => [static::update()],
-            'view' => [static::view()],
+            'list' => [TabbedLayout::listing()],
+            'create' => [TabbedLayout::create()],
+            'update' => [TabbedLayout::update()],
+            'view' => [TabbedLayout::view()],
         ];
     }
 

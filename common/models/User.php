@@ -178,7 +178,7 @@ class User extends MainActiveRecord implements IdentityInterface
 
 
 
-    public function getEditableRoles()
+    public function getEditableRoles($user_id = null)
     {
         $editable_roles = RbacController::getEditableRoles();
         if(isset($editable_roles[$this->role]))
@@ -186,13 +186,20 @@ class User extends MainActiveRecord implements IdentityInterface
             array_walk($editable_roles[$this->role],function(&$value,$key) {
                 $value = isset(self::roles()[$key]) ? self::roles()[$key] : $value;
             });
+            if($user_id !== null && $user_id === $this->id)
+                $editable_roles[$this->role][$this->role] = $this->getCurrentRole();
         }
         return isset($editable_roles[$this->role]) ? $editable_roles[$this->role] : [];
     }
 
     public function  canEdit($checking_role)
     {
-        return isset(self::getEditableRoles()[$checking_role]) || array_key_exists($checking_role,self::getEditableRoles());
+        foreach (self::getEditableRoles() as  $role => $label)
+        {
+            if($checking_role == $role)
+                return true;
+        }
+        return false;
     }
 
     public function canDelete($checking_role)
@@ -245,6 +252,10 @@ class User extends MainActiveRecord implements IdentityInterface
             {
                 $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
                 $this->generateAuthKey();
+                if($this->email_verification_code === null)
+                {
+                    $this->email_verification_code = Yii::$app->security->generateRandomString(16);
+                }
             }
             return true;
         }
@@ -256,6 +267,10 @@ class User extends MainActiveRecord implements IdentityInterface
     public function afterSave($insert,$oldAttributes)
     {
         parent::afterSave($insert,$oldAttributes);
+        if($insert)
+        {
+                $this->sendVerificationEmail($this->email_verification_code);
+        }
         if(!is_dir($this->getFileSavePath()))
         {
             FileHelper::createDirectory($this->getFileSavePath());
@@ -428,7 +443,7 @@ class User extends MainActiveRecord implements IdentityInterface
     {
         if($this->email_verification_status == self::EMAIL_NOT_VERIFIED)
         {
-            if(Yii::$app->mailer->compose('email_verification',['email_verification_url' => Url::to(['user/verify-email','code'=>$code],true)])
+            if(Yii::$app->mailer->compose('email-verification',['email_verification_url' => Url::to(['user/verify-email','code'=>$code],true)])
                 ->setTo($this->email)->setSubject('Dear,'.(empty($this->username) ? $this->email : $this->username))->send()) {
 
                 Alert::addSuccess(Yii::t('messages','Verification Email has been sent!'));

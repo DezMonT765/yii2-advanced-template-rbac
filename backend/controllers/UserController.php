@@ -61,7 +61,7 @@ class UserController extends MainController
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('user-list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -76,7 +76,7 @@ class UserController extends MainController
     {
         $model = $this->findModel(User::className(),$id);
         self::checkAccess(RbacController::update_profile,['user'=>$model]);
-        return $this->render('view', [
+        return $this->render('user-view', [
             'model' => $model,
         ]);
     }
@@ -93,7 +93,7 @@ class UserController extends MainController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['list', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
+            return $this->render('user-form', [
                 'model' => $model,
             ]);
         }
@@ -113,7 +113,7 @@ class UserController extends MainController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
+            return $this->render('user-form', [
                 'model' => $model,
             ]);
         }

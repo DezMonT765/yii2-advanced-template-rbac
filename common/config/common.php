@@ -1,6 +1,6 @@
 <?php
 return [
-    'language' => 'ru-RU',
+    'language' => 'en-EN',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'aliases' => [
         '@file_save_dir' => '@common/files/',
@@ -22,14 +22,14 @@ return [
             'class' => 'common\components\MainView',
         ],
         'mailer' => [
-            'class' => \zyx\phpmailer\Mailer::className(),
+            'class' =>'common\components\Mailer',
             'viewPath' => '@common/mail',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
             'useFileTransport' => false,
             'messageConfig'    => [
-                'from' => ['support@admin-template.com'],
+                'from' => ['support@asura.com'=>'Consilium Partnership'],
             ],
 
         ],

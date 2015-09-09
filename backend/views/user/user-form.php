@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="user-form">
-
+    <br>
     <?php $form = ActiveForm::begin([
         'options'=> [
             'class'=>'col-md-6'
@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
     <?php endif?>
 
-    <?= $form->field($model, 'status')->dropDownList(User::$statuses) ?>
+    <?= $form->field($model, 'status')->dropDownList(User::statuses()) ?>
 
     <?= $form->field($model, 'role')->dropDownList(Yii::$app->user->identity->getEditableRoles()) ?>
 

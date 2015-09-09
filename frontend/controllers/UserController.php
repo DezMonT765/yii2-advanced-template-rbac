@@ -44,7 +44,7 @@ class UserController extends MainController
     {
         $model = $this->findModel(User::className(),$id);
         self::checkAccess(RbacController::update_profile,['user'=>$model]);
-        return $this->render('view', [
+        return $this->render('user-view', [
             'model' => $model,
         ]);
     }
