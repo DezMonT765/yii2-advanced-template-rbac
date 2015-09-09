@@ -1,11 +1,13 @@
 <?php
 namespace common\models;
 
-use MainActiveRecord;
+use common\components\Alert;
+use console\controllers\RbacController;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\FileHelper;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -16,6 +18,7 @@ use yii\web\UploadedFile;
  * @property integer $id
  * @property string $password_hash
  * @property string $password_reset_token
+ * @property string $username
  * @property string $email
  * @property string $file
  * @property string $auth_key
@@ -24,11 +27,17 @@ use yii\web\UploadedFile;
  * @property integer $updated_at
  * @property string $password write-only password
  * @property string $role
+ * @property integer $email_verification_status
+ * @property string $email_verification_code
  */
 class User extends MainActiveRecord implements IdentityInterface
 {
 
     public   $resumeFile;
+    const PASSWORD_CHANGE = 'password-change';
+    const EMAIL_VERIFIED = 1;
+    const EMAIL_NOT_VERIFIED = 0;
+
 
     /**
      * @inheritdoc
@@ -37,13 +46,14 @@ class User extends MainActiveRecord implements IdentityInterface
     {
         return [
             ['email','filter','filter'=>'trim'],
+            ['username','string'],
             ['email','email'],
             ['email','unique'],
             [['email'],'required'],
             [['password','passwordConfirm'],'required','on'=>'create'],
             ['passwordConfirm','compare','compareAttribute'=>'password','on'=>'create'],
             ['role','default','value'=> self::user],
-            ['role','in','range'=>!Yii::$app->user->isGuest ? array_flip(Yii::$app->user->identity->getEditableRoles()) : array_flip(User::roles())],
+            ['role','in','range'=> array_flip(User::roles())],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
         ];
@@ -170,22 +180,19 @@ class User extends MainActiveRecord implements IdentityInterface
 
     public function getEditableRoles()
     {
-        $editable_roles = [
-            self::super_admin => [self::admin => Yii::t('user','Admin'),self::user=>Yii::t('user','User')],
-            self::admin => [self::user=>Yii::t('user','User')],
-            self::user => [self::user=>Yii::t('user','User')]
-        ];
+        $editable_roles = RbacController::getEditableRoles();
+        if(isset($editable_roles[$this->role]))
+        {
+            array_walk($editable_roles[$this->role],function(&$value,$key) {
+                $value = isset(self::roles()[$key]) ? self::roles()[$key] : $value;
+            });
+        }
         return isset($editable_roles[$this->role]) ? $editable_roles[$this->role] : [];
     }
 
     public function  canEdit($checking_role)
     {
-        foreach (self::getEditableRoles() as  $role=>$label)
-        {
-            if($checking_role == $role)
-                return true;
-        }
-        return false;
+        return isset(self::getEditableRoles()[$checking_role]) || array_key_exists($checking_role,self::getEditableRoles());
     }
 
     public function canDelete($checking_role)
@@ -406,5 +413,34 @@ class User extends MainActiveRecord implements IdentityInterface
             'created_at' => Yii::t('user','Created At'),
             'updated_at' => Yii::t('user','Updated At'),
         ];
+    }
+
+    public function sendWelcomeMail()
+    {
+        if($this->email_verification_status == self::EMAIL_VERIFIED)
+        {
+            Yii::$app->mailer->compose('welcome_mail',['user_name' => (empty($this->username) ? $this->email : $this->username), 'user_email' => $this->email])->setTo($this->email)->send();
+            Alert::addSuccess(Yii::t('messages','Your email has been verified'));
+        }
+    }
+
+    public function sendVerificationEmail($code)
+    {
+        if($this->email_verification_status == self::EMAIL_NOT_VERIFIED)
+        {
+            if(Yii::$app->mailer->compose('email_verification',['email_verification_url' => Url::to(['user/verify-email','code'=>$code],true)])
+                ->setTo($this->email)->setSubject('Dear,'.(empty($this->username) ? $this->email : $this->username))->send()) {
+
+                Alert::addSuccess(Yii::t('messages','Verification Email has been sent!'));
+            }
+            else
+                Alert::addError(Yii::t('messages','Verification Email hasn\'t been sent'),Yii::$app->mailer->adapter->ErrorInfo);
+        }
+    }
+
+    public function renewVerificationCode()
+    {
+        $this->email_verification_code = Yii::$app->security->generateRandomString(16);
+        return $this->save();
     }
 }

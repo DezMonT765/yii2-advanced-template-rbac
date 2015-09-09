@@ -14,7 +14,7 @@ include_once('header.php');
     <?php
 
     NavBar::begin([
-                      'brandLabel' => 'Advanced Template frontend',
+                      'brandLabel' => Yii::t('app','Frontend panel'),
                       'brandUrl' => Yii::$app->homeUrl,
                       'options' => [
                           'class' => 'navbar-default navbar-fixed-top',

@@ -10,7 +10,12 @@ use frontend\filters\UserLayout;
 use common\controllers\MainController;
 use common\models\User;
 use console\controllers\RbacController;
+use Yii;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 class UserController extends MainController
 {
@@ -42,6 +47,49 @@ class UserController extends MainController
         return $this->render('view', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @throws HttpException
+     * check users by received code, and if everything is ok, marks them as verified
+     */
+    public function actionVerifyEmail()
+    {
+        $code = Yii::$app->request->getQueryParam('code');
+        if($code)
+        {
+            $user = User::findOne(['email_verification_code'=>$code]);
+            if(!($user instanceof User))
+            {
+                throw new NotFoundHttpException(Yii::t('messages','Invalid code'));
+            }
+            $user->email_verification_status = User::EMAIL_VERIFIED;
+            if(!$user->save())
+            {
+                throw new ServerErrorHttpException(Yii::t('messages','Something goes wrong. Please contact us, or try again later.'));
+            }
+            $user->sendWelcomeMail();
+
+            return $this->goHome();
+
+        }
+        else
+        {
+            throw new BadRequestHttpException('Invalid code');
+        }
+    }
+
+    public function actionGetVerificationMail()
+    {
+        /**@var User $user*/
+        $user = Yii::$app->user->identity;
+        if($user->renewVerificationCode())
+        {
+            $user->sendVerificationEmail($user->email_verification_code);
+            return $this->redirect(['user/view','id'=>$user->id]);
+        }
+        else
+            return $this->goHome();
     }
 
 

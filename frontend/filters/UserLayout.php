@@ -13,7 +13,7 @@ class UserLayout extends TabbedLayout
 {
     public static  function layout(array $active = [])
     {
-        $active = array_merge($active,[self::profile()]);
+        $active = array_merge($active,[SiteLayout::profile()]);
         $nav_bar = parent::layout($active);
         return $nav_bar;
     }

@@ -48,4 +48,15 @@ class RegisterForm extends Model
 
         return null;
     }
+
+
+
+    public function attributeLabels()
+    {
+        return [
+            'email' => Yii::t('app','Email'),
+            'password' => Yii::t('app','Password'),
+            'passwordConfirm' => Yii::t('app','Confirm password'),
+        ];
+    }
 }

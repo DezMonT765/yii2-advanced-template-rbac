@@ -12,6 +12,8 @@ use Yii;
 class ResetPasswordForm extends Model
 {
     public $password;
+    public $passwordConfirm;
+
 
     /**
      * @var \common\models\User
@@ -29,11 +31,11 @@ class ResetPasswordForm extends Model
     public function __construct($token, $config = [])
     {
         if (empty($token) || !is_string($token)) {
-            throw new InvalidParamException('Password reset token cannot be blank.');
+            throw new InvalidParamException(Yii::t('messages','Password reset token cannot be blank.'));
         }
         $this->_user = User::findByPasswordResetToken($token);
         if (!$this->_user) {
-            throw new InvalidParamException('Wrong password reset token.');
+            throw new InvalidParamException(Yii::t('messages','Wrong password reset token.'));
         }
         parent::__construct($config);
     }
@@ -45,7 +47,7 @@ class ResetPasswordForm extends Model
     {
         return [
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['passwordConfirm','compare','compareAttribute'=>'password','on'=>['create']],
         ];
     }
 
@@ -57,9 +59,11 @@ class ResetPasswordForm extends Model
     public function resetPassword()
     {
         $user = $this->_user;
-        $user->setPassword($this->password);
+        $user->scenario = User::PASSWORD_CHANGE;
+        $user->password = $this->password;
         $user->removePasswordResetToken();
 
-        return $user->save();
+        $result = $user->save();
+        return $result;
     }
 }

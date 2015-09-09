@@ -23,27 +23,11 @@ class UserGroupRule extends Rule
         $current_user = Yii::$app->user->identity;
         if (!Yii::$app->user->isGuest) {
             $role = $current_user->role;
-            if(isset(RbacController::$role_hierarchy[$item->name]) || array_key_exists($item->name,RbacController::$role_hierarchy))
-                return self::generateRoleCondition($item->name,$role);
+            if(isset(RbacController::getRoleHierarchy()[$item->name]) || array_key_exists($item->name,RbacController::getRoleHierarchy()))
+                return RbacController::generateRoleCondition($item->name,$role);
         }
         return false;
     }
 
-    protected  function  generateRoleCondition($role,$checking_role)
-    {
 
-            $parent_role = isset(RbacController::$role_hierarchy[$role]) || array_key_exists($role,RbacController::$role_hierarchy) ?  RbacController::$role_hierarchy[$role] : null;
-
-            if(!is_null($parent_role))
-            {
-                $condition = self::generateRoleCondition($parent_role, $checking_role);
-                $condition = $condition || $role == $checking_role;
-            }
-            else
-            {
-                $condition = $role == $checking_role;
-            }
-
-        return $condition;
-    }
 }

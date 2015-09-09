@@ -24,6 +24,7 @@ class m130524_201442_init extends Migration
             'created_at' => Schema::TYPE_INTEGER . ' NOT NULL',
             'updated_at' => Schema::TYPE_INTEGER . ' NOT NULL',
             'role' => Schema::TYPE_STRING . '(64) NOT NULL',
+            'username' => Schema::TYPE_STRING . '(64) NULL',
         ], $tableOptions);
     }
 

@@ -58,8 +58,8 @@ class SiteLayout extends LayoutFilter
     public static function getGuestRightNav(array $active = [])
     {
         return [
-            ['label'=>'Log in','url'=>Url::to('/site/login'),'active'=>self::getActive($active,self::login())],
-            ['label'=>'Register','url'=>Url::to('/site/register'),'active'=>self::getActive($active,self::register())],
+            ['label'=>'Log in','url'=>Url::to('/site/login'),'active'=>self::getActive($active,SiteLayout::login())],
+            ['label'=>'Register','url'=>Url::to('/site/register'),'active'=>self::getActive($active,SiteLayout::register())],
         ];
     }
 
@@ -67,7 +67,7 @@ class SiteLayout extends LayoutFilter
     {
         $user = User::getLogged(true);
         $tabs = [
-            ['label'=>'My profile','url'=>Url::to(['user/view','id'=>$user->id]),'active'=>self::getActive($active,self::profile())]
+            ['label'=>'My profile','url'=>Url::to(['user/view','id'=>$user->id]),'active'=>self::getActive($active,SiteLayout::profile())]
         ];
 
         return $tabs;
@@ -79,7 +79,7 @@ class SiteLayout extends LayoutFilter
         return [
 
             ['label'=>'Hello, '.$user->email,'items'=>[
-                ['label'=>'My profile','url'=>Url::to(['user/view','id'=>$user->id]),'active'=>self::getActive($active,self::profile())],
+                ['label'=>'My profile','url'=>Url::to(['user/view','id'=>$user->id]),'active'=>self::getActive($active,SiteLayout::profile())],
                 ['label'=>'Log out','url'=>['site/logout']],
             ]]
         ];

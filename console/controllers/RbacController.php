@@ -15,6 +15,7 @@ use Yii;
 use yii\caching\FileCache;
 use yii\console\Controller;
 use yii\rbac\DbManager;
+use yii\rbac\Item;
 
 class RbacController extends Controller
 {
@@ -79,9 +80,106 @@ class RbacController extends Controller
 
     }
 
-    public static $role_hierarchy = [
-        self::user => self::admin,
-        self::admin => self::super_admin,
-        self::super_admin => null
-    ];
+    public static function getRoleHierarchy()
+    {
+        if(self::$role_hierarchy === null)
+        {
+            $auth = Yii::$app->authManager;
+            self::$roles = self::$roles === null ? $auth->getRoles() : self::$roles;
+            foreach ( self::$roles as $role)
+            {
+                self::$role_hierarchy[$role->name] = !isset(self::$role_hierarchy[$role->name]) ? null : self::$role_hierarchy[$role->name];
+                foreach ($auth->getChildren($role->name) as $child_role)
+                {
+                    if($child_role->type == Item::TYPE_ROLE)
+                    {
+                        self::$role_hierarchy[$child_role->name][$role->name] = $role->name;
+                    }
+                }
+            }
+        }
+
+        return self::$role_hierarchy;
+    }
+
+    public static function getRoleHierarchyDesc()
+    {
+        if(self::$role_hierarchy_desc === null){
+            $auth = Yii::$app->authManager;
+            self::$roles = self::$roles === null ? $auth->getRoles() : self::$roles;
+            foreach (self::$roles as $role)
+            {
+                self::$role_hierarchy_desc[$role->name] = [];
+                $children = $auth->getChildren($role->name);
+                foreach ($children as $child_role)
+                {
+                    if($child_role->type == Item::TYPE_ROLE)
+                    {
+                        self::$role_hierarchy_desc[$role->name][$child_role->name] = $child_role->name;
+                    }
+                }
+            }
+        }
+        return self::$role_hierarchy_desc;
+    }
+
+
+    public static   function  generateRoleCondition($role,$checking_role)
+    {
+
+        $parent_role = isset(RbacController::getRoleHierarchy()[$role]) || array_key_exists($role,RbacController::getRoleHierarchy()) ?  RbacController::getRoleHierarchy()[$role] : null;
+
+        if(!is_null($parent_role))
+        {
+            if(is_array($parent_role))
+            {
+                $condition = false;
+                foreach ($parent_role as $c_parent_role)
+                {
+                    $condition = $condition || self::generateRoleCondition($c_parent_role, $checking_role);
+                    $condition = $condition || $role == $checking_role;
+                }
+            }
+            else
+            {
+                $condition = self::generateRoleCondition($parent_role, $checking_role);
+                $condition = $condition || $role == $checking_role;
+            }
+
+        }
+        else
+        {
+            $condition = $role == $checking_role;
+        }
+
+        return $condition;
+    }
+
+    public static function getEditableRoles()
+    {
+        if(self::$editable_roles === null)
+        {
+            foreach (self::getRoleHierarchyDesc() as $role => $children)
+            {
+                self::$editable_roles[$role] = self::getChildrenRecursively($role);
+            }
+        }
+        return  self::$editable_roles;
+    }
+
+    public static function getChildrenRecursively($role)
+    {
+        $child_roles = isset(self::getRoleHierarchyDesc()[$role]) ? self::getRoleHierarchyDesc()[$role] : [];
+        foreach(self::getRoleHierarchyDesc()[$role] as $child_role)
+        {
+            $child_roles = array_merge($child_roles,self::getChildrenRecursively($child_role));
+        }
+        return $child_roles;
+    }
+
+    public static $role_hierarchy = null;
+    public static $role_hierarchy_desc = null;
+    public static $editable_roles = null;
+    public static $roles = null;
+
 }
