@@ -275,8 +275,11 @@ class User extends MainActiveRecord implements IdentityInterface
         {
             FileHelper::createDirectory($this->getFileSavePath());
         }
-        if(!is_dir($this->getFileViewDir()))
+        if(!is_link($this->getFileViewDir()))
         {
+            if(is_dir($this->getFileViewDir()))
+                FileHelper::removeDirectory($this->getFileViewDir());
+
             symlink($this->getFileSaveDir(),$this->getFileViewDir());
         }
         if($this->resumeFile instanceof UploadedFile)
@@ -293,7 +296,7 @@ class User extends MainActiveRecord implements IdentityInterface
 
     /**
      * @inheritdoc
-     */
+*/
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
