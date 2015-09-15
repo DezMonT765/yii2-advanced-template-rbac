@@ -15,7 +15,7 @@ class UserLayout extends TabbedLayout
 
     public static  function layout(array $active = [])
     {
-        $active = array_merge($active,[self::users()]);
+        $active = array_merge($active,[AdminLayout::users()]);
         $nav_bar = parent::layout($active);
         return $nav_bar;
     }

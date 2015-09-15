@@ -13,7 +13,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'aliases' => [
-        '@file_view_dir' => '@backend/files',
+        '@file_view_dir' => '@backend/web/files',
     ],
     'bootstrap' => ['log'],
     'modules' => [],

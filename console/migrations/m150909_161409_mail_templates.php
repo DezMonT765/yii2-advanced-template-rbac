@@ -19,6 +19,27 @@ class m150909_161409_mail_templates extends Migration
             'subject' => Schema::TYPE_STRING . '(150) NOT NULL',
             'template' => Schema::TYPE_TEXT,
         ], $tableOptions);
+        $this->insert('{{%mail_templates}}',[
+            'template_type' => 'email-verification',
+            'subject' => 'Email Verification',
+            'template' => '<p>Dear {user_name},</p>
+                <p>Thank you for expressing your interest in our site. To finalize your request we need to verify your email address.</p>
+                <p>Please <a href="{email_verification_url}">click here</a> to complete the registration process.</p>
+                <p>Thank you again for your interest.</p>
+                <p>Best regards,</p>
+                <p>Advanced Template</p>
+                <p>advanced-template.dev</p>'
+        ]);
+
+        $this->insert('{{%mail_templates}}',[
+            'template_type' => 'welcome-mail',
+            'subject' => 'Welcome',
+            'template' => '<p>Dear {user_name},</p>
+                <p>Thank you completing your registration with our site.</p>
+                <p>Best regards,</p>
+                <p>Advanced Template</p>
+                <p>advanced-template.dev</p>'
+        ]);
     }
 
     public function down()

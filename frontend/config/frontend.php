@@ -16,7 +16,7 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'aliases' => [
-        '@file_view_dir' => '@frontend/files',
+        '@file_view_dir' => '@frontend/web/files',
     ],
     'components' => [
         'user' => [

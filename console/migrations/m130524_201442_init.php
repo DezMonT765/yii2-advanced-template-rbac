@@ -24,8 +24,8 @@ class m130524_201442_init extends Migration
             'updated_at' => Schema::TYPE_INTEGER . ' NOT NULL',
             'role' => Schema::TYPE_STRING . '(64) NOT NULL',
             'username' => Schema::TYPE_STRING . '(64) NULL',
-            'email_verification_status' => Schema::TYPE_BOOLEAN . 'NOT NULL DEFAULT 0',
-            'email_verification_code' => Schema::TYPE_STRING . '(256) NULL DEFAULT 0',
+            'email_verification_status' => $this->boolean()->notNull()->defaultValue(0),
+            'email_verification_code' => $this->string(256),
         ], $tableOptions);
     }
 

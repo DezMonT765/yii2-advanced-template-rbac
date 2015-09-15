@@ -1,10 +1,14 @@
 <?php
+use common\components\MainView;
+
 return [
     'language' => 'en-EN',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'aliases' => [
         '@file_save_dir' => '@common/files/',
-        '@file_view_url' => '/files/'
+        '@file_view_url' => '/files/',
+        '@backend_file_view_dir' => '@backend/web/files',
+        '@frontend_file_view_dir' => '@frontend/web/files'
     ],
     'components' => [
         'cache' => [
@@ -12,6 +16,17 @@ return [
         ],
         'assetManager'=>[
             'appendTimestamp' => true,
+            'bundles' =>  [
+                \yii\web\JqueryAsset::className() => [
+                    'js'=> [
+                        "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
+                    ],
+                    'jsOptions' =>
+                        [
+                            'position' => MainView::POS_HEAD,
+                        ],
+                ],
+            ]
         ],
         'authManager' => [
             'class' => yii\rbac\DbManager::className(),
@@ -29,7 +44,7 @@ return [
             // for the mailer to send real emails.
             'useFileTransport' => false,
             'messageConfig'    => [
-                'from' => ['support@asura.com'=>'Consilium Partnership'],
+                'from' => ['support@test.com'=>'Test Mailer'],
             ],
 
         ],

@@ -82,7 +82,7 @@ class AdminLayout extends LayoutFilter
     {
         $tabs = [
             ['label' => 'Manage users', 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
-            ['label' => 'Manage templates', 'url' => Url::to(['mail-template/list']), 'active' => self::getActive($active, AdminLayout::templates())]
+            ['label' => 'Manage Email templates', 'url' => Url::to(['mail-template/list']), 'active' => self::getActive($active, AdminLayout::templates())]
 
         ];
         return $tabs;

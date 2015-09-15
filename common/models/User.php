@@ -2,6 +2,7 @@
 namespace common\models;
 
 use common\components\Alert;
+use common\helpers\Helper;
 use console\controllers\RbacController;
 use Yii;
 use yii\base\NotSupportedException;
@@ -33,7 +34,7 @@ use yii\web\UploadedFile;
 class User extends MainActiveRecord implements IdentityInterface
 {
 
-    public   $resumeFile;
+    public   $uploadedFile;
     const PASSWORD_CHANGE = 'password-change';
     const EMAIL_VERIFIED = 1;
     const EMAIL_NOT_VERIFIED = 0;
@@ -63,7 +64,9 @@ class User extends MainActiveRecord implements IdentityInterface
     {
         if(parent::beforeValidate())
         {
-            if($this->resumeFile instanceof UploadedFile)
+            self::initLocalTransaction();
+            $this->uploadedFile = UploadedFile::getInstance($this,'picture');
+            if($this->uploadedFile instanceof UploadedFile)
             {
                 if(!$this->isNewRecord)
                 {
@@ -73,7 +76,7 @@ class User extends MainActiveRecord implements IdentityInterface
                         unlink($this->getFileSavePath(). $this->oldAttributes['file']);
                     }
                 }
-                $this->file = $this->getFileName() . $this->resumeFile->extension;
+                $this->file = $this->getFileName() . $this->uploadedFile->extension;
             }
             else
             {
@@ -93,6 +96,16 @@ class User extends MainActiveRecord implements IdentityInterface
     public function getFileViewDir()
     {
        return Yii::getAlias('@file_view_dir');
+    }
+
+    public function getBackendViewDir() {
+        $path = Yii::getAlias('@backend_file_view_dir');
+        return $path;
+    }
+
+    public function getFrontendViewDir() {
+        $path = Yii::getAlias('@frontend_file_view_dir');
+        return $path;
     }
 
     public function getFileViewUrl()
@@ -275,15 +288,24 @@ class User extends MainActiveRecord implements IdentityInterface
         {
             FileHelper::createDirectory($this->getFileSavePath());
         }
-        if(!is_link($this->getFileViewDir()))
+        if(!Helper::_is_link($this->getBackendViewDir()))
         {
-            if(is_dir($this->getFileViewDir()))
-                FileHelper::removeDirectory($this->getFileViewDir());
+            if(is_dir($this->getBackendViewDir()))
+                FileHelper::removeDirectory($this->getBackendViewDir());
 
-            symlink($this->getFileSaveDir(),$this->getFileViewDir());
+            symlink($this->getFileSaveDir(),$this->getBackendViewDir());
         }
-        if($this->resumeFile instanceof UploadedFile)
-            $this->resumeFile->saveAs($this->getFileSavePath() . $this->file);
+        if(!Helper::_is_link($this->getFrontendViewDir()))
+        {
+            if(is_dir($this->getFrontendViewDir()))
+                FileHelper::removeDirectory($this->getFrontendViewDir());
+
+            symlink($this->getFileSaveDir(),$this->getFrontendViewDir());
+        }
+
+        if($this->uploadedFile instanceof UploadedFile)
+            $this->uploadedFile->saveAs($this->getFileSavePath() . $this->file);
+        self::commitLocalTransaction();
     }
 
     /**
@@ -437,7 +459,7 @@ class User extends MainActiveRecord implements IdentityInterface
     {
         if($this->email_verification_status == self::EMAIL_VERIFIED)
         {
-            Yii::$app->mailer->compose('welcome_mail',['user_name' => (empty($this->username) ? $this->email : $this->username), 'user_email' => $this->email])->setTo($this->email)->send();
+            Yii::$app->mailer->compose('welcome-mail',['user_name' => (empty($this->username) ? $this->email : $this->username), 'user_email' => $this->email])->setTo($this->email)->send();
             Alert::addSuccess(Yii::t('messages','Your email has been verified'));
         }
     }
@@ -446,13 +468,14 @@ class User extends MainActiveRecord implements IdentityInterface
     {
         if($this->email_verification_status == self::EMAIL_NOT_VERIFIED)
         {
-            if(Yii::$app->mailer->compose('email-verification',['email_verification_url' => Url::to(['user/verify-email','code'=>$code],true)])
-                ->setTo($this->email)->setSubject('Dear,'.(empty($this->username) ? $this->email : $this->username))->send()) {
-
+            if(Yii::$app->mailer->compose('email-verification',[
+                'user_name' =>(empty($this->username) ? $this->email : $this->username),
+                'email_verification_url' => Url::to(['user/verify-email','code'=>$code],true),
+            ])->setTo($this->email)->setSubject('Dear,'.(empty($this->username) ? $this->email : $this->username))->send()){
                 Alert::addSuccess(Yii::t('messages','Verification Email has been sent!'));
             }
             else
-                Alert::addError(Yii::t('messages','Verification Email hasn\'t been sent'),Yii::$app->mailer->adapter->ErrorInfo);
+                Alert::addError(Yii::t('messages','Verification Email hasn\'t been sent'));
         }
     }
 

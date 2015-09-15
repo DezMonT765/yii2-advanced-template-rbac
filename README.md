@@ -66,10 +66,8 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
 You can then install the application using the following command:
 
-~~~
-php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
-php composer.phar create-project --prefer-dist dezmont765/yii2-rbac-advanced-template
-~~~
+    php composer.phar global require "fxp/composer-asset-plugin:1.0.0" php
+    composer.phar create-project --prefer-distdezmont765/yii2-rbac-advanced-template
 
 
 GETTING STARTED
@@ -80,9 +78,8 @@ the installed application. You only need to do these once for all.
 
 1. Run command `php init` to initialize the application with a specific environment.
 2. Create a new database and adjust the `components['db']` configuration in `common/config/common-local.php` accordingly.
-3. Apply migrations with console commands: 
-   a) `php yii migrate`. This will create tables needed for the application to work;
-   b) `php yii migrate --migrationPath=@yii/rbac/migrations`. This will create RBAC tables.
+3. Apply migrations with console command: 
+   `php yii migrate`. This will create tables needed for the application to work;
 4. Run command `php yii rbac/init` to install necessary RBAC rules in DB
 4. Set document roots of your Web server:
 
@@ -97,4 +94,11 @@ This types of users can be simply changed by editing the role field in user tabl
 
 When you register the first user in the system, his role is set to `user` by default.
 Notice that `user` have no access to backend, so you'll have to change his role to `admin` or `super_admin` in the DB manually.
-Once, you enter the backend, you will see a simple but powerful user-management page where you can CRUD users, as you wish.
+Once, you enter the backend, you will see a simple but powerful user-management page where you can CRUD users, as you wish.Also there you can find Manage Email Templates page, where you can create your own email templates, and then simply use it, like static email templates: 
+
+    Yii:$app->mailer->composer('your_email_template_name',$params) .
+
+See "email-verification" template for example . 
+
+
+
