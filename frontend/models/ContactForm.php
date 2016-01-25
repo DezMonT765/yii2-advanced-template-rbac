@@ -2,19 +2,44 @@
 
 namespace frontend\models;
 
+use himiklab\yii2\recaptcha\ReCaptchaValidator;
 use Yii;
-use yii\base\Model;
+use yii\db\ActiveRecord;
 
 /**
  * ContactForm is the model behind the contact form.
+ * @property string $name
+ * @property string $email
+ * @property string $phone_number
+ * @property string $text
+ * @property string $subject
  */
-class ContactForm extends Model
+class ContactForm extends ActiveRecord
 {
-    public $name;
-    public $email;
-    public $subject;
-    public $body;
+
+    public function  __construct($config = [])
+    {
+        parent::__construct();
+        if(!Yii::$app->user->isGuest)
+        {
+            $this->name = empty($this->name) ?  User::getLogged(true)->username : $this->name;
+            $this->email = empty($this->email) ? User::getLogged(true)->email : $this->email;
+        }
+    }
     public $verifyCode;
+
+    public static function  tableName()
+    {
+        return 'contact_letters';
+    }
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        Yii::$app->mailer->compose('user-contact-email')
+            ->setTo($this->email)
+            ->send();
+    }
 
     /**
      * @inheritdoc
@@ -23,11 +48,11 @@ class ContactForm extends Model
     {
         return [
             // name, email, subject and body are required
-            [['name', 'email', 'subject', 'body'], 'required'],
+            [['name', 'email', 'phone_number', 'text'], 'required'],
             // email has to be a valid email address
             ['email', 'email'],
             // verifyCode needs to be entered correctly
-            ['verifyCode', 'captcha'],
+                ['verifyCode',  ReCaptchaValidator::className(),],
         ];
     }
 
@@ -37,23 +62,12 @@ class ContactForm extends Model
     public function attributeLabels()
     {
         return [
-            'verifyCode' => 'Verification Code',
+            'verifyCode' => Yii::t('app',':contact_form_verification_code'),
+            'name' => Yii::t('',':contact_form_name'),
+            'email' => ':contact_form_email',
+            'phone_number' => ':contact_form_phone_number',
         ];
     }
 
-    /**
-     * Sends an email to the specified email address using the information collected by this model.
-     *
-     * @param  string  $email the target email address
-     * @return boolean whether the email was sent
-     */
-    public function sendEmail($email)
-    {
-        return Yii::$app->mailer->compose()
-            ->setTo($email)
-            ->setFrom([$this->email => $this->name])
-            ->setSubject($this->subject)
-            ->setTextBody($this->body)
-            ->send();
-    }
+
 }

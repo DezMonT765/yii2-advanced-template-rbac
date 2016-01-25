@@ -15,6 +15,7 @@ use yii\helpers\Url;
  * @method static register()
  * @method static users()
  * @method static templates()
+ * @method static translations()
  */
 
 class AdminLayout extends LayoutFilter
@@ -81,14 +82,15 @@ class AdminLayout extends LayoutFilter
     public static function getSuperAdminLeftTabs($active)
     {
         $tabs = [
-            ['label' => 'Manage users', 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
-            ['label' => 'Manage Email templates', 'url' => Url::to(['mail-template/list']), 'active' => self::getActive($active, AdminLayout::templates())]
+            ['label' => Yii::t('app',':admin_header_manage_users'), 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
+            ['label' => Yii::t('app',':admin_header_manage_mail_templates'), 'url' => Url::to(['mail-templates/list']), self::getActive($active,AdminLayout::templates())],
+            ['label' => Yii::t('app',':admin_header_manage_translations'), 'url' => Url::to(['translation/list']), 'active' => self::getActive($active, AdminLayout::translations())],
 
         ];
         return $tabs;
     }
 
-    public static function getRightNav()
+    public static function getRightNav($active)
     {
         /**@var User $user*/
         $user = Yii::$app->user->identity;

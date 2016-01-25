@@ -8,7 +8,6 @@ use yii\helpers\StringHelper;
 
 $urlParams = $generator->generateUrlParams();
 $nameAttribute = $generator->getNameAttribute();
-$model_name = Inflector::camel2id(StringHelper::basename($generator->modelClass));
 
 echo "<?php\n";
 ?>
@@ -23,12 +22,13 @@ use yii\helpers\Url;
 
 $this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 ?>
-<div class="<?= $model_name ?>-index">
+<div class="<?= $generator->getControllerID() ?>-index">
 <br>
 
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
+        'id' => '<?= $generator->getControllerID()?>-list',
         'dataProvider' => $dataProvider,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
         ['class' => 'yii\grid\CheckboxColumn'],
@@ -58,9 +58,9 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-    <?= '<?php '?> echo Html::button('Delete',['class'=>'btn btn-danger','id'=>'delete-<?=$model_name?>'])?>
+    <?= '<?php '?> echo Html::button('Delete',['class'=>'btn btn-danger','id'=>'delete-<?=$generator->getControllerID()?>'])?>
 <?php else: ?>
-    <?= "<?= " ?>ListView::widget([
+    <?="<?="?>ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => function ($model, $key, $index, $widget) {
@@ -71,17 +71,17 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
 </div>
 <script>
-    $('#delete-groups').click(function()
+    $("#delete-<?=$generator->getControllerID()?>").click(function()
     {
         if(confirm("<?=Yii::t('app','Are you sure you want to delete all selected categories?')?>"))
         {
-            var list = $('#group-list').yiiGridView('getSelectedRows');
+            var list = $('#<?=$generator->getControllerID()?>-list').yiiGridView('getSelectedRows');
             var newlist = {};
             $(list).each(function(index,value)
             {
                 newlist["keys["+index+"]"] = value;
             });
-            $.post('<?='<?='?>Url::to([\'mass-delete\'])?>',newlist,function(data)
+            $.post("<?='<?='?>Url::to(['mass-delete'])?>",newlist,function(data)
             {
                 window.location.reload();
             });

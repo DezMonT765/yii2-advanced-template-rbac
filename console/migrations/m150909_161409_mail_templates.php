@@ -40,6 +40,17 @@ class m150909_161409_mail_templates extends Migration
                 <p>Advanced Template</p>
                 <p>advanced-template.dev</p>'
         ]);
+
+        $this->insert('{{%mail_templates}}', [
+            'template_type' => 'password-token',
+            'subject' => 'Reset password',
+            'template' => '<p>Dear {user_name},</p>
+                <p>we have received a request to reset your password. If you have initiated this request, please click on the following link to complete the process:</p>
+                <p><a href="{password-reset-link}">{password-reset-link}</a></p>
+                <p>In case you have not initiated this request, please ignore this message.</p>
+                <p>Best regards,</p>
+                <p>advanced-template.dev</p>'
+        ]);
     }
 
     public function down()

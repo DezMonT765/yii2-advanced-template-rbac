@@ -130,7 +130,7 @@ class Alert
     {
         /**@var \common\components\MainView $viewInstance*/
         $result = '';
-        $view = Yii::$app->params['isDetailedAlert'] ? 'alertView' : 'alertSmallView' ;
+        $view = ParamsGetter::is_detailed_alert() ? 'alertView' : 'alertSmallView' ;
         if(self::issetAlerts())
         {
             $result = $viewInstance->render('/'.$view,array('general_message'=>self::getGeneralMessage(),

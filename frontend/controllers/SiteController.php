@@ -2,9 +2,12 @@
 namespace frontend\controllers;
 
 use common\components\Alert;
+use common\components\ParamsGetter;
 use common\controllers\MainController;
 use console\controllers\RbacController;
 use frontend\filters\SiteLayout;
+use frontend\models\PasswordChangeForm;
+use frontend\models\PasswordResetForm;
 use Yii;
 use frontend\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
@@ -12,6 +15,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\RegisterForm;
 use frontend\models\ContactForm;
 use yii\base\InvalidParamException;
+use yii\log\Logger;
 use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -33,12 +37,12 @@ class SiteController extends MainController
                 'except' => ['test'],
                 'rules' => [
                     [
-                        'actions' => ['register','login','index'],
+                        'actions' => ['register','login','index','password-change','password-reset','contact','captcha'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout','index'],
+                        'actions' => ['logout','index','error','contact','captcha'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -96,19 +100,22 @@ class SiteController extends MainController
     public function actionContact()
     {
         $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending email.');
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if($model->save())
+            {
+                Alert::addSuccess('Thank you for contacting us. We will respond to you as soon as possible.');
+                return $this->redirect(['/']);
             }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
+            else
+            {
+                Alert::addError('There was an error sending email.');
+                Yii::getLogger()->log($model->errors,Logger::LEVEL_ERROR);
+            }
         }
+        else
+            return $this->render('contact',['model'=>$model]);
+
     }
 
     public function actionAbout()
@@ -132,12 +139,23 @@ class SiteController extends MainController
         ]);
     }
 
-    public function actionRequestPasswordReset()
+    public function actionPasswordReset()
     {
-        $model = new PasswordResetRequestForm();
+        $model = new PasswordResetForm();
         if(Yii::$app->user->isGuest)
         {
-            $model->load(Yii::$app->request->post());
+            if($model->load(Yii::$app->request->post()) && $model->validate())
+            {
+                $model->sendEmail();
+                Alert::addSuccess('Thank you. If the email address you entered matches with one that is registered in our system we will send you a reset link within the next few minutes.');
+                return $this->goHome();
+            }
+            else
+            {
+                return $this->render('password-reset', [
+                    'model' => $model,
+                ]);
+            }
         }
         else
         {
@@ -145,47 +163,46 @@ class SiteController extends MainController
         }
         if($model->validate())
         {
-            if($model->sendEmail())
-            {
-                Alert::addSuccess(Yii::t('messages','Check your email for further instructions.'));
-                return $this->goHome();
-            }
-            else
-            {
-                Alert::addError(Yii::t('messages','Sorry, we are unable to reset password for email provided.'));
-                return $this->goHome();
-            }
+            $model->sendEmail();
+            Alert::addSuccess('Thank you. If the email address you entered matches with one that is registered in our system we will send you a reset link within the next few minutes.');
+            return $this->goHome();
         }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
+        else
+        {
+            return $this->render('password-reset', [
+                'model' => $model,
+            ]);
+        }
     }
 
-    public function actionResetPassword($token)
+
+
+
+
+    public function actionPasswordChange($token)
     {
         try
         {
-            $model = new ResetPasswordForm($token);
+            $model = new PasswordChangeForm($token);
         }
         catch (InvalidParamException $e)
         {
-            throw new BadRequestHttpException(Yii::t('messages','Wrong password reset token.'));
+            throw new BadRequestHttpException('Wrong password reset token.');
         }
         if($model->load(Yii::$app->request->post()))
         {
-            if($model->validate() && $model->resetPassword())
+            if($model->validate() && $model->changePassword())
             {
-                Alert::addSuccess(Yii::t('messages', 'New password was saved.'));
+                Alert::addSuccess('New password was saved.');
                 return $this->goHome();
             }
             else
             {
-                Alert::addError(Yii::t('messages','Password hasn\'t been saved.'));
+                Alert::addError('Password hasn\'t been saved.');
                 return $this->goHome();
             }
         }
-        return $this->render('resetPassword', [
+        return $this->render('password-change', [
             'model' => $model,
         ]);
     }

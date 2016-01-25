@@ -1,5 +1,6 @@
 <?php
 use common\components\MainView;
+use common\models\Languages;
 
 return [
     'language' => 'en-EN',
@@ -48,6 +49,12 @@ return [
             ],
 
         ],
+        'reCaptcha' => [
+            'name' => 'reCaptcha',
+            'class' => 'himiklab\yii2\recaptcha\ReCaptcha',
+            'siteKey' => '',
+            'secret' => '',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -62,12 +69,25 @@ return [
         ],
         'i18n' => [
             'translations' => [
-                '*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@common/messages',
+                'app' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    //'basePath' => '@app/messages',
                     'sourceLanguage' => 'en-US',
+                    'forceTranslation' => true
                 ],
+                '*' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    //'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-US',
+                    'forceTranslation' => true
+                ]
             ],
         ],
+        'languagepicker' => [
+            'class' => '\lajax\languagepicker\widgets\LanguagePicker',
+            'languages' => function(){
+                return Languages::getLanguageNames(true);
+            }
+        ]
     ],
 ];

@@ -44,7 +44,7 @@ class Generator extends \yii\gii\Generator
      */
     public function getName()
     {
-        return 'Lamasa Generator';
+        return 'Advanced Generator';
     }
 
     /**

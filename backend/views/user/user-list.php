@@ -14,10 +14,11 @@ $this->title = Yii::t('user', 'List users');
 <div class="user-index">
     <br>
     <?= GridView::widget([
+        'id' => 'user-list',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\CheckboxColumn'],
 
              [
                  'attribute'=>'email',
@@ -52,7 +53,6 @@ $this->title = Yii::t('user', 'List users');
                    return User::getRole($data->role);
                },
                'type'=>'select',
-               'display' => "function(value,sourceData,response){console.log(sourceData);}",
                'editableOptions'=>
                [
                    'source' => Yii::$app->user->identity->getEditableRoles(),
@@ -75,6 +75,7 @@ $this->title = Yii::t('user', 'List users');
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php echo Html::button('Delete',['class'=>'btn btn-danger','id'=>'delete-user'])?>
 
 </div>
 <script>
@@ -85,4 +86,20 @@ $this->title = Yii::t('user', 'List users');
             colors = <?=json_encode(User::$status_colors)?>;
         $(this).html(selected[0].text).css("color", colors[value]);
     }
+    $("#delete-user").click(function()
+    {
+        if(confirm("Are you sure you want to delete all selected items?"))
+        {
+            var list = $('#user-list').yiiGridView('getSelectedRows');
+            var newlist = {};
+            $(list).each(function(index,value)
+            {
+                newlist["keys["+index+"]"] = value;
+            });
+            $.post("<?=Url::to(['mass-delete'])?>",newlist,function(data)
+            {
+                window.location.reload();
+            });
+        }
+    });
 </script>

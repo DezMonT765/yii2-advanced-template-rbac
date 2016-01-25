@@ -89,3 +89,16 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+.translation-form-input {
+    width: 500px !important;
+    margin : 0 10px;
+}
+
+.translation-form {
+    margin : 10px 0;
+}
+.translation-list {
+    padding : 10px 0;
+}
+

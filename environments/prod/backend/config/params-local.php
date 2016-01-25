@@ -1,4 +1,6 @@
 <?php
+use common\components\Params;
+
 return [
-    'isDetailedAlert' => true
+    Params::is_detailed_alert() => true
 ];

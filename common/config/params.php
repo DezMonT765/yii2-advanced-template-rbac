@@ -1,7 +1,9 @@
 <?php
+use common\components\Params;
+
 return [
-    'adminEmail' => 'admin@example.com',
+    Params::admin_email() => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
-    'isDetailedAlert' => false,
+    Params::is_detailed_alert() => false,
 ];

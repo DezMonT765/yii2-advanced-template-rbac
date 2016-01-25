@@ -48,4 +48,21 @@ class Helper  {
 
         return false;
     }
+
+    public static function recursive_clear($array) {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                if(count($value) > 0)
+                    $array[$key] = self::recursive_clear($array[$key]);
+                else
+                    unset($array[$key]);
+            }
+
+            if (empty($array[$key])) {
+                unset($array[$key]);
+            }
+        }
+
+        return $array;
+    }
 }

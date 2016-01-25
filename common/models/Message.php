@@ -1,9 +1,8 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
-use yii\db\ActiveRecord;
 use yii\i18n\DbMessageSource;
 
 /**
@@ -13,10 +12,11 @@ use yii\i18n\DbMessageSource;
  * @property string $language
  * @property string $translation
  *
- * @property SourceMessage $source_message
+ * @property SourceMessage $sourceMessage
  */
-class Message extends ActiveRecord
+class Message extends MainActiveRecord
 {
+    const PAGE_COUNT = 10;
     /**
      * @inheritdoc
      */
@@ -60,6 +60,9 @@ class Message extends ActiveRecord
      */
     public function getSourceMessage()
     {
-        return $this->hasOne(SourceMessage::className(), ['id' => 'id']);
+        return $this->hasOne(SourceMessage::className(), ['id' => 'id'])
+            ->from([SourceMessage::tableName() .' sourceMessage']);
     }
+
+
 }

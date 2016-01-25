@@ -2,14 +2,14 @@
 <div class="alert alert-<?=$general_color?> alert-dismissible" style="margin-top: 20px">
 
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <?if (count($succStore)) :?>
-        <?=Alert::recursiveFind($succStore,'msg');?>
+    <?if (count($success_store)) :?>
+        <?=Alert::recursiveFind($success_store,'msg');?>
     <?endif?>
-    <?if (count($warnStore)) :?>
-        <?=Alert::recursiveFind($warnStore,'msg');?>
+    <?if (count($warning_store)) :?>
+        <?=Alert::recursiveFind($warning_store,'msg');?>
     <?endif?>
-    <?if (count($errStore)) :?>
-        <?=Alert::recursiveFind($errStore,'msg');?>
+    <?if (count($error_store)) :?>
+        <?=Alert::recursiveFind($error_store,'msg');?>
     <?endif?>
 </div>
 <script>

@@ -1,7 +1,6 @@
 <?php
 namespace frontend\models;
 
-use common\models\User;
 use yii\base\InvalidParamException;
 use yii\base\Model;
 use Yii;
@@ -9,7 +8,7 @@ use Yii;
 /**
  * Password reset form
  */
-class ResetPasswordForm extends Model
+class PasswordChangeForm extends Model
 {
     public $password;
     public $passwordConfirm;
@@ -31,11 +30,11 @@ class ResetPasswordForm extends Model
     public function __construct($token, $config = [])
     {
         if (empty($token) || !is_string($token)) {
-            throw new InvalidParamException(Yii::t('messages','Password reset token cannot be blank.'));
+            throw new InvalidParamException('Password reset token cannot be blank.');
         }
         $this->_user = User::findByPasswordResetToken($token);
         if (!$this->_user) {
-            throw new InvalidParamException(Yii::t('messages','Wrong password reset token.'));
+            throw new InvalidParamException('Wrong password reset token.');
         }
         parent::__construct($config);
     }
@@ -46,8 +45,8 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'required'],
-            ['passwordConfirm','compare','compareAttribute'=>'password','on'=>['create']],
+            [['password','passwordConfirm'], 'required'],
+            ['passwordConfirm','compare','compareAttribute'=>'password','skipOnEmpty'=>false],
         ];
     }
 
@@ -56,11 +55,12 @@ class ResetPasswordForm extends Model
      *
      * @return boolean if password was reset.
      */
-    public function resetPassword()
+    public function changePassword()
     {
         $user = $this->_user;
         $user->scenario = User::PASSWORD_CHANGE;
         $user->password = $this->password;
+        $user->passwordConfirm = $this->passwordConfirm;
         $user->removePasswordResetToken();
 
         $result = $user->save();

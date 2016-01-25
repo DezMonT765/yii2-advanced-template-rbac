@@ -1,4 +1,5 @@
 <?php
+use himiklab\yii2\recaptcha\ReCaptcha;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
@@ -24,9 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'email') ?>
                 <?= $form->field($model, 'subject') ?>
                 <?= $form->field($model, 'body')->textArea(['rows' => 6]) ?>
-                <?= $form->field($model, 'verifyCode')->widget(Captcha::className(), [
-                    'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
-                ]) ?>
+                <?= $form->field($model, 'verifyCode')->widget(ReCaptcha::className()) ?>
                 <div class="form-group">
                     <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
                 </div>

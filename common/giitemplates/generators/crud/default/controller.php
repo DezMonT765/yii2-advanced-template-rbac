@@ -4,6 +4,7 @@
  */
 
 use yii\db\ActiveRecordInterface;
+use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 
@@ -29,6 +30,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
+use Exception;
 use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 <?php if (!empty($generator->searchModelClass)): ?>
@@ -52,7 +54,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public $defaultAction = 'list';
     public function behaviors()
     {
-        $behaviors = [];
+        $behaviors = [
+            'layout' => <?=Inflector::camelize($generator->getControllerID())?>Layout::className(),
+        ];
         return $behaviors;
     }
 
@@ -61,7 +65,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return  [
             'ajax-update' => [
                 'class' => EditableAction::className(),
-                'modelClass' => Users::className(),
+                'modelClass' => <?=$modelClass?>::className(),
                 'forceCreate' => false
             ]
         ];
@@ -78,7 +82,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $searchModel->load(Yii::$app->request->queryParams);
         $dataProvider = $searchModel->search();
 
-        return $this->render('<?php $generator->getControllerID()?>-list', [
+        return $this->render('<?= $generator->getControllerID()?>-list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -87,7 +91,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 'query' => <?= $modelClass ?>::find(),
             ]);
 
-            return $this->render('<?php $generator->getControllerID()?>-list', [
+            return $this->render('<?= $generator->getControllerID()?>-list', [
                 'dataProvider' => $dataProvider,
             ]);
         <?php endif; ?>
@@ -100,9 +104,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionView(<?= $actionParams ?>)
     {
-         $model = $this->findModel(<?= $actionParams ?>);
-         return $this->render('<?php $generator->getControllerID()?>-view', [
-            'model' => $model),
+         $model = $this->findModel(<?=$modelClass?>::className(),<?= $actionParams ?>);
+         return $this->render('<?= $generator->getControllerID()?>-view', [
+            'model' => $model,
          ]);
     }
 
@@ -118,7 +122,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', <?= $urlParams ?>]);
         } else {
-            return $this->render('<?php $generator->getControllerID()?>-form', [
+            return $this->render('<?= $generator->getControllerID()?>-form', [
                    'model' => $model,
             ]);
         }
@@ -132,12 +136,11 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionUpdate(<?= $actionParams ?>)
     {
-        $model = $this->findModel(<?= $actionParams ?>);
-
+        $model = $this->findModel(<?=$modelClass?>::className(),<?= $actionParams ?>);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', <?= $urlParams ?>]);
         } else {
-                return $this->render('<?php $generator->getControllerID()?>-form', [
+                return $this->render('<?= $generator->getControllerID()?>-form', [
                 'model' => $model,
             ]);
         }
@@ -151,7 +154,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionDelete(<?= $actionParams ?>)
     {
-        $this->findModel(<?= $actionParams ?>)->delete();
+        try
+        {
+            $model = $this->findModel(<?=$modelClass?>::className(),<?= $actionParams ?>);
+            $model->delete();
+        }
+        catch(Exception $e) {
+            Alert::addError('Item has not been deleted', $e->getMessage());
+        }
         return $this->redirect(['list']);
     }
 
@@ -162,20 +172,26 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         {
             foreach ($_POST['keys'] as $key)
             {
-                $model = $this->findModel($key);
-                if($model)
-                {
-                    if($model->delete()){
-                        Alert::addSuccess("Items has been successfully deleted");
+                try {
+                    $model = $this->findModel(<?=$modelClass?>::className(), $key);
+                    if($model)
+                    {
+                        if($model->delete()){
+                            Alert::addSuccess("Items has been successfully deleted");
+                        }
                     }
+                }
+                catch(Exception $e) {
+                    Alert::addError('Item has not been deleted',$e->getMessage());
                 }
             }
         }
+        return $this->redirect(['list']);
     }
 
-    public function actionAsAjax($id)
+    public function actionAsAjax(<?= $actionParams ?>)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel(<?=$modelClass?>::className(),<?= $actionParams ?>);
         Yii::$app->response->format = Response::FORMAT_JSON;
         return $model->toArray();
     }
@@ -185,7 +201,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionGetSelectionList()
     {
-        parent::selectionList(Groups::className(), 'name');
+            self::selectionList(<?=$modelClass?>::className(),'name');
     }
 
     /**
@@ -193,7 +209,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     */
     public function actionGetSelectionById()
     {
-        self::selectionById(Groups::className(),'name');
+        self::selectionById(<?=$modelClass?>::className(),'name');
     }
 
 }

@@ -1,4 +1,6 @@
 <?php
+use common\components\Params;
+
 return [
-    'adminEmail' => 'admin@example.com',
+    Params::admin_email() => 'admin@example.com',
 ];

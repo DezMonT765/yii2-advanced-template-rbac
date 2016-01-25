@@ -15,7 +15,17 @@ if (!YII_ENV_TEST) {
     $config['modules']['debug'] = 'yii\debug\Module';
 
     $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = 'yii\gii\Module';
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        'generators' => [ //here
+                          'advanced-crud' => [ // generator name
+                                               'class' => 'common\giitemplates\generators\crud\Generator', // generator class
+                                               'templates' => [ //setting for out templates
+                                                                'advanced-crud' => '@common/giitemplates/generators\crud/default', // template name => path to template
+                                               ]
+                          ]
+        ],
+    ];
 }
 
 return $config;

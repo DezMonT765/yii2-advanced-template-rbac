@@ -12,10 +12,12 @@ use console\controllers\RbacController;
 use common\components\MainView;
 use common\controllers\MainController;
 use yii\base\ActionFilter;
+use yii\rbac\Role;
 
 class LayoutFilter extends ActionFilter
 {
     public $layout = 'main';
+    public static $role = null;
 
 
     public static  function getActiveMap()
@@ -53,13 +55,23 @@ class LayoutFilter extends ActionFilter
      */
     public static function getRole()
     {
-        if(\Yii::$app->user->isGuest)
-            return "Guest";
-        else
-            if(\Yii::$app->user->can(RbacController::super_admin))
-                return RbacController::super_admin;
-            else return RbacController::user;
-
+        if(self::$role === null)
+        {
+            if(\Yii::$app->user->isGuest)
+            {
+                self::$role = "Guest";
+            }
+            else
+            {
+                $role = \Yii::$app->authManager->getRole(\Yii::$app->user->identity->role);
+                if($role instanceof Role)
+                {
+                    self::$role =  $role->name;
+                }
+                else self::$role = 'Guest';
+            }
+        }
+        return self::$role;
     }
 
     public static  function getActive(array $active = [],$tab)

@@ -2,6 +2,7 @@
 namespace common\components;
 use common\models\MailTemplates;
 use Exception;
+use yii\db\ActiveRecord;
 use yii\log\Logger;
 use yii\mail\BaseMessage;
 
@@ -16,6 +17,7 @@ class Mailer extends \zyx\phpmailer\Mailer
 {
     private $_subject = "";
 
+    public $class = 'common\models\MailTemplates';
     public function compose($view = null, array $params = [])
     {
         if(!count($params)) $params = ['render'=>true];
@@ -24,12 +26,17 @@ class Mailer extends \zyx\phpmailer\Mailer
         return $message;
     }
 
+
     public function render($view, $params = [], $layout = false)
     {
         try
         {
-            $template = MailTemplates::findOne(['template_type' => $view]);
-            if($template instanceof MailTemplates)
+            /**@var $class ActiveRecord*/
+            $class = $this->class;
+            if(!($view instanceof $class))
+                $template = $class::findOne(['template_type' => $view]);
+            else $template = $view;
+            if($template instanceof $class)
             {
                 $this->_subject = $template->subject;
                 $template_str = $template->template;

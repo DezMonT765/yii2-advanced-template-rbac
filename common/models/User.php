@@ -60,79 +60,6 @@ class User extends MainActiveRecord implements IdentityInterface
         ];
     }
 
-    public function beforeValidate()
-    {
-        if(parent::beforeValidate())
-        {
-            self::initLocalTransaction();
-            $this->uploadedFile = UploadedFile::getInstance($this,'picture');
-            if($this->uploadedFile instanceof UploadedFile)
-            {
-                if(!$this->isNewRecord)
-                {
-
-                    if(is_file($this->getFileSavePath(). $this->oldAttributes['file']))
-                    {
-                        unlink($this->getFileSavePath(). $this->oldAttributes['file']);
-                    }
-                }
-                $this->file = $this->getFileName() . $this->uploadedFile->extension;
-            }
-            else
-            {
-                if(isset($this->oldAttributes['file']))
-                    $this->file = $this->oldAttributes['file'];
-            }
-            return true;
-        }
-        else return false;
-    }
-
-    public function getFileSaveDir()
-    {
-        return Yii::getAlias('@file_save_dir');
-    }
-
-    public function getFileViewDir()
-    {
-       return Yii::getAlias('@file_view_dir');
-    }
-
-    public function getBackendViewDir() {
-        $path = Yii::getAlias('@backend_file_view_dir');
-        return $path;
-    }
-
-    public function getFrontendViewDir() {
-        $path = Yii::getAlias('@frontend_file_view_dir');
-        return $path;
-    }
-
-    public function getFileViewUrl()
-    {
-        return Yii::getAlias('@file_view_url');
-    }
-
-    public function getFileSavePath()
-    {
-        return self::getFileSaveDir() . $this->id . DIRECTORY_SEPARATOR;
-    }
-
-    public function getFileViewPath()
-    {
-        return self::getFileViewUrl() . $this->id . '/';
-    }
-
-    public function getFile()
-    {
-        return self::getFileViewPath() . $this->file;
-    }
-
-    public function getFileName()
-    {
-        return Yii::$app->security->generateRandomString(16) . '.';
-    }
-
 
     public $password;
     public $passwordConfirm;
@@ -150,8 +77,8 @@ class User extends MainActiveRecord implements IdentityInterface
     public static function statuses()
     {
         return [
-            self::STATUS_ACTIVE => Yii::t('user','Active'),
-            self::STATUS_INACTIVE => Yii::t('user','Inactive')
+            self::STATUS_ACTIVE => Yii::t('app',':user_status_active'),
+            self::STATUS_INACTIVE => Yii::t('app',':user_status_inactive')
         ];
     }
 
@@ -178,9 +105,9 @@ class User extends MainActiveRecord implements IdentityInterface
 
     public static function roles() {
         return [
-            self::user => Yii::t('user','User'),
-            self::admin => Yii::t('user','Admin'),
-            self::super_admin => Yii::t('user','Super Admin'),
+            self::user => Yii::t('app',':user_role_user'),
+            self::admin => Yii::t('app',':user_role_admin'),
+            self::super_admin => Yii::t('app',':user_role_super_admin'),
         ];
     }
 
@@ -227,15 +154,12 @@ class User extends MainActiveRecord implements IdentityInterface
      */
     public static  function getLogged($safe = false)
     {
-        if(!self::$_logged_user || self::$_is_need_update)
+        $user = Yii::$app->user->identity;
+        if($safe && !($user instanceof User))
         {
-            self::$_logged_user = self::findOne(['id'=>Yii::$app->user->id]);
-            if($safe && !(self::$_logged_user  instanceof User))
-            {
-                throw new NotFoundHttpException;
-            }
+            throw new NotFoundHttpException;
         }
-        return self::$_logged_user ;
+        return $user;
     }
 
     /**
@@ -284,27 +208,6 @@ class User extends MainActiveRecord implements IdentityInterface
         {
                 $this->sendVerificationEmail($this->email_verification_code);
         }
-        if(!is_dir($this->getFileSavePath()))
-        {
-            FileHelper::createDirectory($this->getFileSavePath());
-        }
-        if(!Helper::_is_link($this->getBackendViewDir()))
-        {
-            if(is_dir($this->getBackendViewDir()))
-                FileHelper::removeDirectory($this->getBackendViewDir());
-
-            symlink($this->getFileSaveDir(),$this->getBackendViewDir());
-        }
-        if(!Helper::_is_link($this->getFrontendViewDir()))
-        {
-            if(is_dir($this->getFrontendViewDir()))
-                FileHelper::removeDirectory($this->getFrontendViewDir());
-
-            symlink($this->getFileSaveDir(),$this->getFrontendViewDir());
-        }
-
-        if($this->uploadedFile instanceof UploadedFile)
-            $this->uploadedFile->saveAs($this->getFileSavePath() . $this->file);
         self::commitLocalTransaction();
     }
 
