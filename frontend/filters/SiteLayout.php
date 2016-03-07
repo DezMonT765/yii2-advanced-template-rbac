@@ -58,8 +58,8 @@ class SiteLayout extends LayoutFilter
     public static function getGuestRightNav(array $active = [])
     {
         return [
-            ['label'=>'Log in','url'=>Url::to('/site/login'),'active'=>self::getActive($active,SiteLayout::login())],
-            ['label'=>'Register','url'=>Url::to('/site/register'),'active'=>self::getActive($active,SiteLayout::register())],
+            ['label'=>'Log in','url'=>Url::to(['/site/login']),'active'=>self::getActive($active,SiteLayout::login())],
+            ['label'=>'Register','url'=>Url::to(['/site/register']),'active'=>self::getActive($active,SiteLayout::register())],
         ];
     }
 
