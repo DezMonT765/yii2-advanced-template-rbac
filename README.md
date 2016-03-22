@@ -66,8 +66,8 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
 You can then install the application using the following command:
 
-    php composer.phar global require "fxp/composer-asset-plugin:1.0.0" php
-    composer.phar create-project --prefer-distdezmont765/yii2-rbac-advanced-template
+    php composer.phar global require "fxp/composer-asset-plugin:1.1.2" php
+    composer.phar create-project --prefer-dist dezmont765/yii2-rbac-advanced-template
 
 
 GETTING STARTED
