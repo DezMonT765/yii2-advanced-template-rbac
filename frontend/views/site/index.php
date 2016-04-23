@@ -10,7 +10,7 @@ $this->title = 'My Yii Application';
     <div class="jumbotron">
         <h1>Awesome!</h1>
         <div class="thumbnail">
-            <img src="/img/awesome.png" alt="awesome">
+            <img src="<?=Yii::$app->homeUrl?>/img/awesome.png" alt="awesome">
         </div>
         <?php if(Yii::$app->user->isGuest) : ?>
         <p class="lead"><?php echo Yii::t('app','The site is now alive! You can :')?></p>
