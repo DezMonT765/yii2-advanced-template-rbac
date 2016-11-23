@@ -1,10 +1,11 @@
 <?php
+use dezmont765\yii2bundle\views\MainView;
 use frontend\filters\SiteLayout;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 
-/* @var $this \common\components\MainView */
+/* @var $this MainView */
 
 include_once('header.php');
 ?>

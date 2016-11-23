@@ -6,8 +6,8 @@
  * Time: 18:58
  */
 namespace frontend\controllers;
+use dezmont765\yii2bundle\controllers\MainController;
 use frontend\filters\UserLayout;
-use common\controllers\MainController;
 use common\models\User;
 use console\controllers\RbacController;
 use Yii;

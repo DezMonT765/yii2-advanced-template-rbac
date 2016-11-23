@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\components\Alert;
 use common\components\xlsImport;
+use dezmont765\yii2bundle\models\MainActiveRecord;
 use Yii;
 use yii\i18n\DbMessageSource;
 use yii\web\BadRequestHttpException;

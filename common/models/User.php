@@ -4,6 +4,7 @@ namespace common\models;
 use common\components\Alert;
 use common\helpers\Helper;
 use console\controllers\RbacController;
+use dezmont765\yii2bundle\models\MainActiveRecord;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;

@@ -1,6 +1,6 @@
 <?php
 namespace common\components;
-use common\controllers\MainController;
+use dezmont765\yii2bundle\controllers\MainController;
 use InvalidArgumentException;
 use Yii;
 use yii\base\Component;

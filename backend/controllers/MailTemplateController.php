@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use backend\filters\MailTemplateLayout;
-use common\controllers\MainController;
 use console\controllers\RbacController;
+use dezmont765\yii2bundle\controllers\MainController;
 use Yii;
 use common\models\MailTemplates;
 use common\models\MailTemplatesSearch;

@@ -34,7 +34,7 @@ class Generator extends \yii\gii\Generator
     public $modelClass;
     public $controllerClass;
     public $viewPath;
-    public $baseControllerClass = 'common\controllers\MainController';
+    public $baseControllerClass = 'dezmont765\yii2bundle\controllers\MainController';
     public $indexWidgetType = 'grid';
     public $searchModelClass = '';
 

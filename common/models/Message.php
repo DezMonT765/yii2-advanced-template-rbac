@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use dezmont765\yii2bundle\models\MainActiveRecord;
 use Yii;
 use yii\i18n\DbMessageSource;
 

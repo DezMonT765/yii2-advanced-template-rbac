@@ -1,6 +1,6 @@
 <?php
-require_once('../../common/components/MainView.php');
-use common\components\MainView;
+require_once('../../vendor/dezmont765/yii2-bundle/views/MainView.php');
+use dezmont765\yii2bundle\views\MainView;
 use frontend\models\User;
 
 $params = array_merge(

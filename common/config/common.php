@@ -1,6 +1,6 @@
 <?php
-use common\components\MainView;
 use common\models\Languages;
+use dezmont765\yii2bundle\views\MainView;
 
 return [
     'language' => 'en-EN',
@@ -35,7 +35,7 @@ return [
             'defaultRoles' => ['super_admin','admin','user']
         ],
         'view' => [
-            'class' => 'common\components\MainView',
+            'class' => MainView::className(),
         ],
         'mailer' => [
             'class' =>'common\components\Mailer',

@@ -1,9 +1,10 @@
 <?php
+use dezmont765\yii2bundle\views\MainView;
 use yii\helpers\Html;
 
 use backend\assets\AppAsset;
 
-/* @var $this \common\components\MainView */
+/* @var $this MainView */
 
 AppAsset::register($this);
 ?>

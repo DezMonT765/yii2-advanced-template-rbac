@@ -1,13 +1,10 @@
 <?php
+use dezmont765\yii2bundle\views\MainView;
+use frontend\assets\AppAsset;
 use yii\helpers\Html;
 
-use frontend\assets\AppAsset;
-use yii\helpers\Url;
-
-/* @var $this \common\components\MainView */
-
+/* @var $this MainView */
 AppAsset::register($this);
-
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,8 +22,8 @@ AppAsset::register($this);
     <?php $this->head() ?>
 
     <!-- form CSS -->
-<!--    <link rel="stylesheet" href="css/jquery.arcticmodal.css">-->
-<!--    <link rel="stylesheet" href="css/jquery.jgrowl.css">-->
+    <!--    <link rel="stylesheet" href="css/jquery.arcticmodal.css">-->
+    <!--    <link rel="stylesheet" href="css/jquery.jgrowl.css">-->
 
 
     <!-- fonts -->

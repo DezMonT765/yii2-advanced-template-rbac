@@ -1,8 +1,8 @@
 <?php
 namespace backend\filters;
-use common\filters\LayoutFilter;
 use common\models\User;
 use console\controllers\RbacController;
+use dezmont765\yii2bundle\filters\LayoutFilter;
 use Yii;
 use yii\helpers\Url;
 

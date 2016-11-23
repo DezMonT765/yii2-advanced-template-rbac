@@ -15,6 +15,7 @@
 
 namespace common\components;
 
+use dezmont765\yii2bundle\views\MainView;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use yii;
@@ -128,7 +129,7 @@ class Alert
      */
     public static function printAlert(&$viewInstance)
     {
-        /**@var \common\components\MainView $viewInstance*/
+        /**@var MainView $viewInstance*/
         $result = '';
         $view = ParamsGetter::is_detailed_alert() ? 'alertView' : 'alertSmallView' ;
         if(self::issetAlerts())

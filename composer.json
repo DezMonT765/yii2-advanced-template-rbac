@@ -22,11 +22,12 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "yiisoft/yii2": "2.0.6",
+        "php": ">=5.6.0",
+        "yiisoft/yii2": "2.0.10",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "dezmont765/yii2-grid-view-library" : "dev-master",
+        "dezmont765/yii2-bundle" : "*",
         "zyx/zyx-phpmailer": "dev-log-fix",
         "bower-asset/ckeditor": "4.*",
         "lajax/yii2-language-picker": "dev-master",
@@ -34,7 +35,7 @@
         "himiklab/yii2-recaptcha-widget": "dev-master"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "*",
+        "codeception/codeception": "*",
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*",
         "yiisoft/yii2-faker": "*"

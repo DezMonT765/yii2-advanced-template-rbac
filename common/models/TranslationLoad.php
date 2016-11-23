@@ -1,11 +1,8 @@
 <?php
 namespace common\models;
 use common\components\Alert;
-use common\components\Crop;
-use common\components\FileSaveBehavior;
 use common\components\KReader;
 use common\components\xlsImport;
-use common\helpers\HelperImage;
 use Yii;
 use yii\base\Model;
 

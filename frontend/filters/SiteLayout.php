@@ -1,9 +1,8 @@
 <?php
 namespace frontend\filters;
 use console\controllers\RbacController;
-use common\filters\LayoutFilter;
 use common\models\User;
-use yii\helpers\Html;
+use dezmont765\yii2bundle\filters\LayoutFilter;
 use yii\helpers\Url;
 
 /**

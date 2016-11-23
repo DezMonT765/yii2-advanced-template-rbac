@@ -1,6 +1,6 @@
 <?php
 namespace backend\assets;
-use common\components\MainView;
+use dezmont765\yii2bundle\views\MainView;
 use yii\web\AssetBundle;
 
 /**

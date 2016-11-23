@@ -7,7 +7,7 @@ use common\models\SourceMessageSearch;
 use common\models\TranslationForm;
 use common\models\TranslationLoad;
 use backend\actions\TranslationEditableAction;
-use common\controllers\MainController;
+use dezmont765\yii2bundle\controllers\MainController;
 use Yii;
 use common\components\Alert;
 

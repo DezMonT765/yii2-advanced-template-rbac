@@ -2,7 +2,7 @@
 namespace backend\controllers;
 
 use backend\filters\AdminLayout;
-use common\controllers\MainController;
+use dezmont765\yii2bundle\controllers\MainController;
 use Yii;
 use yii\filters\AccessControl;
 use backend\models\LoginForm;

@@ -2,16 +2,12 @@
 namespace frontend\controllers;
 
 use common\components\Alert;
-use common\components\ParamsGetter;
-use common\controllers\MainController;
-use console\controllers\RbacController;
+use dezmont765\yii2bundle\controllers\MainController;
 use frontend\filters\SiteLayout;
 use frontend\models\PasswordChangeForm;
 use frontend\models\PasswordResetForm;
 use Yii;
 use frontend\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
 use frontend\models\RegisterForm;
 use frontend\models\ContactForm;
 use yii\base\InvalidParamException;
