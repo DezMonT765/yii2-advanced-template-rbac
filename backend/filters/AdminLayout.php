@@ -83,7 +83,7 @@ class AdminLayout extends LayoutFilter
     {
         $tabs = [
             ['label' => Yii::t('app',':admin_header_manage_users'), 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
-            ['label' => Yii::t('app',':admin_header_manage_mail_templates'), 'url' => Url::to(['mail-templates/list']), self::getActive($active,AdminLayout::templates())],
+            ['label' => Yii::t('app',':admin_header_manage_mail_templates'), 'url' => Url::to(['mail-template/list']), self::getActive($active,AdminLayout::templates())],
             ['label' => Yii::t('app',':admin_header_manage_translations'), 'url' => Url::to(['translation/list']), 'active' => self::getActive($active, AdminLayout::translations())],
 
         ];

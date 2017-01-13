@@ -16,7 +16,7 @@ namespace backend\filters;
 class TabbedLayout extends AdminLayout
 {
     const place_tabs = 'tabs';
-    public $layout = 'tabbedLayout';
+    public static $layout = 'tabbedLayout';
     public static function getActiveMap()
     {
 

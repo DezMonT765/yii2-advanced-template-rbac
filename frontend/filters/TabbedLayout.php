@@ -16,7 +16,7 @@ namespace frontend\filters;
 class TabbedLayout extends SiteLayout
 {
     const place_tabs = 'tabs';
-    public $layout = 'tabbedLayout';
+    public static $layout = 'tabbedLayout';
     public static function getActiveMap()
     {
 

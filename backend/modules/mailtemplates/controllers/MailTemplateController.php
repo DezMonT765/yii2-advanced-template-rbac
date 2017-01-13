@@ -1,13 +1,13 @@
 <?php
 
-namespace backend\controllers;
+namespace dezmont765\MailTemplatesModule\controllers;
 
 use backend\filters\MailTemplateLayout;
 use console\controllers\RbacController;
+use dezmont765\MailTemplatesModule\models\MailTemplates;
+use dezmont765\MailTemplatesModule\models\MailTemplatesSearch;
 use dezmont765\yii2bundle\controllers\MainController;
 use Yii;
-use common\models\MailTemplates;
-use common\models\MailTemplatesSearch;
 use yii\filters\AccessControl;
 
 /**
@@ -18,7 +18,7 @@ class MailTemplateController extends MainController
     public function behaviors()
     {
         return [
-            'access' => [
+            self::ACCESS_FILTER => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
@@ -46,20 +46,7 @@ class MailTemplateController extends MainController
         ]);
     }
 
-
-    /**
-     * Displays a single MailTemplates model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel(MailTemplates::className(), $id);
-        return $this->render('mail-template-view', [
-            'model' => $model
-        ]);
-    }
-
+    
 
     /**
      * Creates a new MailTemplates model.
@@ -71,7 +58,7 @@ class MailTemplateController extends MainController
         $model = new MailTemplates();
         if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['list']);
         }
         else
         {
@@ -93,7 +80,7 @@ class MailTemplateController extends MainController
         $model = $this->findModel(MailTemplates::className(), $id);
         if($model->load(Yii::$app->request->post()) && $model->save())
         {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['list']);
         }
         else
         {
@@ -114,6 +101,6 @@ class MailTemplateController extends MainController
     {
         $model = $this->findModel(MailTemplates::className(), $id);
         $model->delete();
-        return $this->redirect(['index']);
+        return $this->redirect(['list']);
     }
 }

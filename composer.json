@@ -14,6 +14,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/DezMonT765/yii2-bundle"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/DezMonT765/zyx-phpmailer"
         },
         {
@@ -27,7 +31,7 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "dezmont765/yii2-grid-view-library" : "dev-master",
-        "dezmont765/yii2-bundle" : "*",
+        "dezmont765/yii2-bundle" : "dev-master",
         "zyx/zyx-phpmailer": "dev-log-fix",
         "bower-asset/ckeditor": "4.*",
         "lajax/yii2-language-picker": "dev-master",
