@@ -9,7 +9,7 @@ use common\models\TranslationLoad;
 use backend\actions\TranslationEditableAction;
 use dezmont765\yii2bundle\controllers\MainController;
 use Yii;
-use common\components\Alert;
+use dezmont765\yii2bundle\components\Alert;
 
 /**
  * Created by PhpStorm.

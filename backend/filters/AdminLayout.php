@@ -1,5 +1,6 @@
 <?php
 namespace backend\filters;
+
 use common\models\User;
 use console\controllers\RbacController;
 use dezmont765\yii2bundle\filters\LayoutFilter;
@@ -17,14 +18,13 @@ use yii\helpers\Url;
  * @method static templates()
  * @method static translations()
  */
-
 class AdminLayout extends LayoutFilter
 {
     const place_left_nav = 'left_nav';
     const place_right_nav = 'right_nav';
-    public static function getActiveMap()
-    {
 
+
+    public static function getActiveMap() {
         return [
             'login' => [self::login()],
             'register' => [self::register()]
@@ -32,72 +32,75 @@ class AdminLayout extends LayoutFilter
     }
 
 
-
-    public static  function layout(array $active = [])
-    {
+    public static function layout(array $active = []) {
         $user_role = static::getRole();
         $nav_bar = [];
-        switch($user_role)
-        {
-            case 'Guest' : $nav_bar = [
-                self::place_left_nav =>[],
-                self::place_right_nav => static::getGuestRightNav($active),
-            ];
+        switch($user_role) {
+            case 'Guest' :
+                $nav_bar = [
+                    self::place_left_nav => [],
+                    self::place_right_nav => static::getGuestRightNav($active),
+                ];
                 break;
-            case RbacController::user : $nav_bar = [
-                self::place_left_nav => static::getLeftTabs($active),
-                self::place_right_nav => static::getRightNav($active),
-            ];
+            case RbacController::user :
+                $nav_bar = [
+                    self::place_left_nav => static::getLeftTabs($active),
+                    self::place_right_nav => static::getRightNav($active),
+                ];
                 break;
-            case RbacController::admin : $nav_bar = [
-                self::place_left_nav => static::getLeftTabs($active),
-                self::place_right_nav => static::getRightNav($active),
-            ];
+            case RbacController::admin :
+                $nav_bar = [
+                    self::place_left_nav => static::getLeftTabs($active),
+                    self::place_right_nav => static::getRightNav($active),
+                ];
                 break;
-            case RbacController::super_admin : $nav_bar = [
-                self::place_left_nav => static::getSuperAdminLeftTabs($active),
-                self::place_right_nav => static::getRightNav($active),
-            ];
+            case RbacController::super_admin :
+                $nav_bar = [
+                    self::place_left_nav => static::getSuperAdminLeftTabs($active),
+                    self::place_right_nav => static::getRightNav($active),
+                ];
         }
-
         return $nav_bar;
     }
 
-    public static function getGuestRightNav($active)
-    {
+
+    public static function getGuestRightNav($active) {
         return [
-            ['label'=>Yii::t('header','Login'),'url'=>Url::to(['site/login']),'active'=>self::getActive($active,self::login())],
+            ['label' => Yii::t('app', ':admin_headed_login'), 'url' => Url::to(['site/login']),
+             'active' => self::getActive($active, self::login())],
         ];
     }
 
-    public static function getLeftTabs($active)
-    {
+
+    public static function getLeftTabs($active) {
         $tabs = [
-            ['label'=>Yii::t('header','Manage users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,self::users())]
-        ];
-
-        return $tabs;
-    }
-
-    public static function getSuperAdminLeftTabs($active)
-    {
-        $tabs = [
-            ['label' => Yii::t('app',':admin_header_manage_users'), 'url' => Url::to(['user/list']), 'active' => self::getActive($active, AdminLayout::users())],
-            ['label' => Yii::t('app',':admin_header_manage_mail_templates'), 'url' => Url::to(['mail-template/list']), self::getActive($active,AdminLayout::templates())],
-            ['label' => Yii::t('app',':admin_header_manage_translations'), 'url' => Url::to(['translation/list']), 'active' => self::getActive($active, AdminLayout::translations())],
-
+            ['label' => Yii::t('app', ':admin_header_manage_users'), 'url' => Url::to(['user/list']),
+             'active' => self::getActive($active, self::users())]
         ];
         return $tabs;
     }
 
-    public static function getRightNav($active)
-    {
-        /**@var User $user*/
+
+    public static function getSuperAdminLeftTabs($active) {
+        $tabs = [
+            ['label' => Yii::t('app', ':admin_header_manage_users'), 'url' => Url::to(['user/list']),
+             'active' => self::getActive($active, AdminLayout::users())],
+            //            ['label' => Yii::t('app',':admin_header_manage_mail_templates'), 'url' => Url::to(['mail-template/list']), self::getActive($active,AdminLayout::templates())],
+            ['label' => Yii::t('app', ':admin_header_manage_translations'), 'url' => Url::to(['translation/list']),
+             'active' => self::getActive($active, AdminLayout::translations())],
+        ];
+        return $tabs;
+    }
+
+
+    public static function getRightNav($active) {
+        /**@var User $user */
         $user = Yii::$app->user->identity;
         return [
-            ['label'=>Yii::t('header','Hello, '). $user->email,'items'=>[
-                ['label'=>Yii::t('header','My profile'),'url'=>Url::to(['user/view','id'=> $user->id])],
-                ['label'=>Yii::t('header','Log out'),'url'=>['site/logout']]
+            ['label' => Yii::t('app', ':admin_header_user_greetings') .' '. $user->email, 'items' => [
+                ['label' => Yii::t('app', ':admin_header_my_profile'),
+                 'url' => Url::to(['user/view', 'id' => $user->id])],
+                ['label' => Yii::t('app', ':admin_header_log_out'), 'url' => ['site/logout']]
             ]],
         ];
     }

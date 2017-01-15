@@ -10,8 +10,5 @@ use yii\base\Module;
  */
 
 class MailTemplatesModule extends Module {
-    public function init()
-    {
-        parent::init();
-    }
+
 }

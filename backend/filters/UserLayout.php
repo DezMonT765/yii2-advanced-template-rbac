@@ -27,7 +27,7 @@ class UserLayout extends TabbedLayout
             ['label'=>Yii::t('user','List users'),'url'=>Url::to(['user/list']),'active'=>self::getActive($active,TabbedLayout::listing())],
             ['label'=>Yii::t('user','Create user'),'url'=>Url::to(['user/create']),'active'=>self::getActive($active,TabbedLayout::create())],
         ];
-        if(self::getActive($active,self::update()))
+        if(self::getActive($active,TabbedLayout::update()))
         {
             $tabs =  array_merge($tabs,[
                 ['label'=>Yii::t('user','Update user'),
@@ -36,15 +36,7 @@ class UserLayout extends TabbedLayout
                 ]
             ]);
         }
-        if(self::getActive($active,self::view()))
-        {
-            $tabs =  array_merge($tabs,[
-                ['label'=>Yii::t('user','View user'),
-                 'url'=>Url::to(array_merge(['user/view'],self::getParams())),
-                 'active'=>true
-                ]
-            ]);
-        }
+
         return $tabs;
     }
 }

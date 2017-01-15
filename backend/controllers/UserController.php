@@ -3,13 +3,17 @@ namespace backend\controllers;
 
 use backend\actions\UserEditableAction;
 use backend\filters\UserLayout;
-use common\components\Alert;
+use common\models\User;
+use common\models\UserSearch;
 use console\controllers\RbacController;
+use dezmont765\yii2bundle\actions\CreateAction;
+use dezmont765\yii2bundle\actions\DeleteAction;
+use dezmont765\yii2bundle\actions\ListAction;
+use dezmont765\yii2bundle\actions\UpdateAction;
+use dezmont765\yii2bundle\components\Alert;
 use dezmont765\yii2bundle\controllers\MainController;
 use Exception;
 use Yii;
-use common\models\User;
-use common\models\UserSearch;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -19,8 +23,7 @@ use yii\web\Response;
  */
 class UserController extends MainController
 {
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -43,89 +46,35 @@ class UserController extends MainController
     }
 
 
-    public function actions()
-    {
+    public function actions() {
         return [
             'ajaxUpdate' => [
                 'class' => UserEditableAction::className(),
                 'modelClass' => User::className(),
                 'forceCreate' => false
+            ],
+            'list' => [
+                'class' => ListAction::className(),
+                'model_class' => UserSearch::className()
+            ],
+            'create' => [
+                'class' => CreateAction::className(),
+                'permission' => RbacController::create_profile
+            ],
+            'update' => [
+                'class' => UpdateAction::className(),
+                'permission' => RbacController::update_profile
+            ],
+            'delete' => [
+                'class' => DeleteAction::className(),
+                'permission' => RbacController::delete_profile
             ]
         ];
     }
 
 
-    /**
-     * Lists all User models.
-     * @return mixed
-     */
-    public function actionList()
-    {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        return $this->render('user-list', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-
-    /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel(User::className(), $id);
-        self::checkAccess(RbacController::update_profile, ['user' => $model]);
-        return $this->render('user-view', [
-            'model' => $model,
-        ]);
-    }
-
-
-    /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new User(['scenario' => 'create']);
-        if($model->load(Yii::$app->request->post()) && $model->save())
-        {
-            return $this->redirect(['list', 'id' => $model->id]);
-        }
-        else
-        {
-            return $this->render('user-form', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel(User::className(), $id);
-        self::checkAccess(RbacController::update_profile, ['user' => $model]);
-        if($model->load(Yii::$app->request->post()) && $model->save())
-        {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        else
-        {
-            return $this->render('user-form', [
-                'model' => $model,
-            ]);
-        }
+    public function getModelClass() {
+        return User::className();
     }
 
 
@@ -135,8 +84,7 @@ class UserController extends MainController
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $model = $this->findModel(User::className(), $id);
         self::checkAccess(RbacController::delete_profile, ['user' => $model]);
         $model->delete();
@@ -144,33 +92,25 @@ class UserController extends MainController
     }
 
 
-    public function actionAvailableGroups()
-    {
+    public function actionAvailableGroups() {
         /**@var User $user */
         $user = Yii::$app->user->identity;
         return json_encode($user->getEditableRoles());
     }
 
 
-    public function actionMassDelete()
-    {
-        if(isset($_POST['keys']))
-        {
-            foreach ($_POST['keys'] as $key)
-            {
-                try
-                {
+    public function actionMassDelete() {
+        if(isset($_POST['keys'])) {
+            foreach($_POST['keys'] as $key) {
+                try {
                     $model = $this->findModel(User::className(), $key);
-                    if($model)
-                    {
-                        if($model->delete())
-                        {
+                    if($model) {
+                        if($model->delete()) {
                             Alert::addSuccess("Items has been successfully deleted");
                         }
                     }
                 }
-                catch (Exception $e)
-                {
+                catch(Exception $e) {
                     Alert::addError('Item has not been deleted', $e->getMessage());
                 }
             }
@@ -179,8 +119,7 @@ class UserController extends MainController
     }
 
 
-    public function actionAsAjax($id)
-    {
+    public function actionAsAjax($id) {
         $model = $this->findModel(User::className(), $id);
         Yii::$app->response->format = Response::FORMAT_JSON;
         return $model->toArray();
@@ -190,8 +129,7 @@ class UserController extends MainController
     /**
      * Provides json response for select2 plugin
      */
-    public function actionGetSelectionList()
-    {
+    public function actionGetSelectionList() {
         self::selectionList(User::className(), 'name');
     }
 
@@ -199,8 +137,7 @@ class UserController extends MainController
     /**
      * Provides json response for select2 plugin
      */
-    public function actionGetSelectionById()
-    {
+    public function actionGetSelectionById() {
         self::selectionById(User::className(), 'name');
     }
 }

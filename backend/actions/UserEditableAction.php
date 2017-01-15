@@ -19,6 +19,6 @@ class UserEditableAction extends  EditableAction
         $pk = Yii::$app->request->post('pk');
         $pk = unserialize(base64_decode($pk));
         $model = $class::findOne($pk);
-        return $this->controller->checkAccess(RbacController::update_profile,['user'=>$model]);
+        return $this->controller->checkAccess(RbacController::update_profile,['model'=>$model]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 use common\models\Languages;
+use dezmont765\yii2bundle\components\Alert;
 use dezmont765\yii2bundle\views\MainView;
 
 return [
@@ -11,15 +12,16 @@ return [
         '@backend_file_view_dir' => '@backend/web/files',
         '@frontend_file_view_dir' => '@frontend/web/files'
     ],
+    'bootstrap' => ['alert'],
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'assetManager'=>[
+        'assetManager' => [
             'appendTimestamp' => true,
-            'bundles' =>  [
+            'bundles' => [
                 \yii\web\JqueryAsset::className() => [
-                    'js'=> [
+                    'js' => [
                         "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
                     ],
                     'jsOptions' =>
@@ -31,23 +33,22 @@ return [
         ],
         'authManager' => [
             'class' => yii\rbac\DbManager::className(),
-            'cache' =>'cache',
-            'defaultRoles' => ['super_admin','admin','user']
+            'cache' => 'cache',
+            'defaultRoles' => ['super_admin', 'admin', 'user']
         ],
         'view' => [
             'class' => MainView::className(),
         ],
         'mailer' => [
-            'class' =>'common\components\Mailer',
+            'class' => 'common\components\Mailer',
             'viewPath' => '@common/mail',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
             'useFileTransport' => false,
-            'messageConfig'    => [
-                'from' => ['support@test.com'=>'Test Mailer'],
+            'messageConfig' => [
+                'from' => ['support@test.com' => 'Test Mailer'],
             ],
-
         ],
         'reCaptcha' => [
             'name' => 'reCaptcha',
@@ -67,6 +68,9 @@ return [
         'session' => [
             'class' => 'yii\web\DbSession'
         ],
+        'alert' => [
+            'class' => Alert::className()
+        ],
         'i18n' => [
             'translations' => [
                 'app' => [
@@ -85,7 +89,7 @@ return [
         ],
         'languagepicker' => [
             'class' => '\lajax\languagepicker\widgets\LanguagePicker',
-            'languages' => function(){
+            'languages' => function () {
                 return Languages::getLanguageNames(true);
             }
         ]

@@ -1,8 +1,6 @@
 <?php
-
 namespace common\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -14,22 +12,22 @@ class UserSearch extends User
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
             [['auth_key', 'password_hash', 'password_reset_token', 'email', 'role'], 'safe'],
         ];
     }
 
+
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+
 
     /**
      * Creates data provider instance with search query applied
@@ -38,36 +36,22 @@ class UserSearch extends User
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search() {
         $query = User::find();
-
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination'=>[
-                'pageSize' => 20
-            ]
-
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
+                                                   'query' => $query,
+                                                   'pagination' => [
+                                                       'pageSize' => 20
+                                                   ]
+                                               ]);
         $query->andFilterWhere([
-            'status' => $this->status,
-            'role' => $this->role,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
-
+                                   'status' => $this->status,
+                                   'role' => $this->role,
+                                   'created_at' => $this->created_at,
+                                   'updated_at' => $this->updated_at,
+                               ]);
         $query->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'role', $this->role]);
-
+              ->andFilterWhere(['like', 'role', $this->role]);
         return $dataProvider;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use common\components\Alert;
+use dezmont765\yii2bundle\components\Alert;
 use common\components\xlsImport;
 use dezmont765\yii2bundle\models\MainActiveRecord;
 use Yii;

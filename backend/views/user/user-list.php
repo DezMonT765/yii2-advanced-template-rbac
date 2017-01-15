@@ -72,7 +72,9 @@ $this->title = Yii::t('user', 'List users');
                  'format'=>'datetime'
              ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             'template' => '{update}{delete}'
+            ],
         ],
     ]); ?>
     <?php echo Html::button('Delete',['class'=>'btn btn-danger','id'=>'delete-user'])?>

@@ -1,10 +1,11 @@
 <?php
+use backend\filters\TabbedLayout;
 use dezmont765\yii2bundle\components\Alert;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
-/* @var $this \dezmont765\yii2bundle\views\MainView */
 $this->beginContent('@app/views/layouts/base-layout.php'); ?>
 <div class="wrap">
     <?php
@@ -25,9 +26,26 @@ $this->beginContent('@app/views/layouts/base-layout.php'); ?>
     ?>
 
     <div class="container">
-        <?= Alert::printAlert(); ?>
-        <?= $content ?>
+        <div class="row">
+    <?= Alert::printAlert(); ?>
+            <?= Nav::widget(
+                [
+                    'options' => ['class' => 'nav-tabs'],
+                    'items' => $this->getLayoutData(TabbedLayout::place_tabs)
+                ]) ?>
+        </div>
+        <div class="row" style="margin-top: 10px">
+            <?php $items = $this->getLayoutData(TabbedLayout::place_top_control_buttons);
+            foreach($items as $button) :
+                if(isset($button['active']) && $button['active'] === true) :
+                    echo Html::a(ArrayHelper::getValue($button, 'label'), ArrayHelper::getValue($button, 'url'),
+                                 ArrayHelper::getValue($button, 'options'));
+                endif;
+            endforeach; ?>
+        </div>
+        <div class="row" >
+            <?= $content ?>
+        </div>
     </div>
 </div>
 <?php $this->endContent() ?>
-

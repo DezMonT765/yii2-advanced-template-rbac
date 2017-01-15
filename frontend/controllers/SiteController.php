@@ -1,7 +1,7 @@
 <?php
 namespace frontend\controllers;
 
-use common\components\Alert;
+use dezmont765\yii2bundle\components\Alert;
 use dezmont765\yii2bundle\controllers\MainController;
 use frontend\filters\SiteLayout;
 use frontend\models\PasswordChangeForm;
@@ -69,7 +69,7 @@ class SiteController extends MainController
 
 
     /**
-     * @return array|Response
+     * @return array|Response|string
      */
     public function actionLogin()
     {

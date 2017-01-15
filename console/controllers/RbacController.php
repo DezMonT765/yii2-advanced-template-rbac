@@ -8,8 +8,8 @@
 
 namespace console\controllers;
 
-use console\rbac\CanEdit;
-use console\rbac\CanDelete;
+use console\rbac\CanEditUser;
+use console\rbac\CanDeleteUser;
 use console\rbac\UserGroupRule;
 use Yii;
 use yii\caching\FileCache;
@@ -44,14 +44,14 @@ class RbacController extends Controller
         $create_profile = $auth->createPermission(self::create_profile);
         $auth->add($create_profile);
 
-        $can_edit = new CanEdit();
+        $can_edit = new CanEditUser();
         $auth->add($can_edit);
 
         $update_profile = $auth->createPermission(self::update_profile);
         $update_profile->ruleName = $can_edit->name;
         $auth->add($update_profile);
 
-        $can_delete = new CanDelete();
+        $can_delete = new CanDeleteUser();
         $auth->add($can_delete);
         $delete_profile = $auth->createPermission(self::delete_profile);
         $delete_profile->ruleName = $can_delete->name;

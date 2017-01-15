@@ -1,6 +1,6 @@
 <?php
 namespace common\models;
-use common\components\Alert;
+use dezmont765\yii2bundle\components\Alert;
 use common\components\KReader;
 use common\components\xlsImport;
 use Yii;

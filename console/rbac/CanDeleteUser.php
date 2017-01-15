@@ -1,5 +1,6 @@
 <?php
 namespace console\rbac;
+
 use common\models\User;
 use Yii;
 use yii\rbac\Rule;
@@ -10,10 +11,11 @@ use yii\rbac\Rule;
  * Date: 31.03.2015
  * Time: 14:46
  */
-
-class CanEdit extends Rule
+class CanDeleteUser extends Rule
 {
     public $name = __CLASS__;
+
+
     /**
      * Executes the rule.
      *
@@ -23,10 +25,13 @@ class CanEdit extends Rule
      * @param array $params parameters passed to [[ManagerInterface::checkAccess()]].
      * @return boolean a value indicating whether the rule permits the auth item it is associated with.
      */
-    public function execute($user, $item, $params)
-    {
-        /**@var User $user*/
+    public function execute($user, $item, $params) {
+        /**@var User $user */
         $user = Yii::$app->user->identity;
-        return (isset($params['user'])) ?  $user->id == $params['user']->id || $user->canEdit($params['user']->role) : false;
+        if($user instanceof User) {
+            return (isset($params['model'])) ?
+                $user->id == $params['model']->id || $user->canDelete($params['model']->role) : false;
+        }
+        else return false;
     }
 }

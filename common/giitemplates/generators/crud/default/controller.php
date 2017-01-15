@@ -40,7 +40,7 @@ use yii\data\ActiveDataProvider;
 <?php endif; ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use console\controllers\RbacController;
-use common\components\Alert;
+use dezmont765\yii2bundle\components\Alert;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
